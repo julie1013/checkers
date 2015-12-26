@@ -1,0 +1,202 @@
+var checkerboard = [[null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null]];
+
+function initializeBoard() {
+  for (var row = 0; row < checkerboard.length; row++){
+        for (var col = 0; col < checkerboard[row].length; col++){
+            if (row < 3){
+                setSquare(row, col, "R");
+            } else if (row > 4){
+                setSquare(row, col, "B");
+            } else {
+                setSquare(row, col, null);
+            }
+        }
+    }
+}
+
+
+function drawBoard() {
+    for (var row = 0; row < checkerboard.length; row++){
+        for (var col = 0; col < checkerboard[row].length; col++){
+            var squareColor;
+            if (isValidSquare(row, col)){
+                squareColor = 'black';
+            } else {
+                squareColor = 'red';
+            }
+            $("#checkerboard").append("<div class = " + squareColor + " data-col='" + col + "' data-row='" + row + "' class='square' id=" + row + '_' + col + "></div>")
+
+        }
+    }
+}
+
+
+function isGameOver() {
+    if (isOnePlayerGone()){
+        console.log("Game over");
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isOnePlayerGone() {
+    var countR = 0;
+    var countB = 0;
+    for (var row = 0; row < checkerboard.length; row++){
+        for (var col = 0; col < checkerboard[row].length; col++){
+            if (checkerboard[row][col] === 'R'){
+                countR++;
+            } else if (checkerboard[row][col] === 'B'){
+                countB++;
+            }
+        }
+    }
+    if ((countR === 0 && countB > 0) || (countB === 0 && countR > 0)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+initializeBoard();
+
+
+function move(firstRow, firstCol, secondRow, secondCol){
+    if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
+        if (checkerboard[secondRow][secondCol] === null){
+            setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+            setSquare(firstRow, firstCol, null);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
+function jump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
+    if (isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece)){
+        setSquare(finalRow, finalCol, checkerboard[firstRow][firstCol]);
+        setSquare(firstRow, firstCol, null);
+        setSquare(secondRow, secondCol, null);
+        return true;
+        } else {
+            return false;
+        }
+    }
+
+// function kingMe(piece, firstRow, firstCol, finalRow, finalCol){
+//     //is R on row 7? is B on row 0?
+//     //if finalRow in move is 7 for R or 0 for B, king
+//     //king piece is rKing or bKing
+
+// }
+
+// function validKing(piece, row){
+//     return piece === 'R' && checkerboard[row] === 7 || piece === 'B' && checkerboard[row] === 0;
+// }
+
+function isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
+    return isJumpToSquareOpen(firstRow, firstCol, finalRow, finalCol, piece) &&
+    isOpponentOnJumpOverSquare(piece, firstRow, firstCol, secondRow, secondCol) &&
+    isValidSquare(finalRow, finalCol);
+}
+
+
+function isJumpToSquareOpen(firstRow, firstCol, secondRow, secondCol, piece){
+    if (checkerboard[secondRow][secondCol] === null && isTwoSpaces(firstRow, firstCol, secondRow, secondCol) && isTwoRows(firstRow, secondRow, piece)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, endingRow, endingCol){
+    return isNextRow(startingRow, endingRow, piece) && isAdjacentSpace(startingRow, startingCol, endingRow, endingCol, piece)
+        && isOpponent(piece, endingRow, endingCol);
+    }
+
+
+function isOpponent(piece, row, col){
+    if (checkerboard[row][col] === null) {
+        return false;
+    } else if (piece === 'R' && checkerboard[row][col] === 'B' || piece === 'B' && checkerboard[row][col] === 'R'){
+        return true;
+    } else {
+        return false;
+        }
+    }
+
+
+function isValidSquare(row, col){
+    return isEven(row) && isEven(col) || !isEven(row) && !isEven(col);
+}
+
+function setSquare(row, col, value) {
+    if (isValidSquare(row, col)){
+        checkerboard[row][col] = value;
+    return value;
+} else {
+    return "That's not a valid square, stupid!";
+    }
+}
+
+
+function isEven(x){
+    return x % 2 === 0;
+}
+
+
+function getPieceAt(row, col){
+   return checkerboard[row][col];
+}
+
+function isValidMove(firstRow, firstCol, secondRow, secondCol){
+    var piece = checkerboard[firstRow][firstCol];
+    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(secondRow, secondCol))){
+        return false;
+    } else if (isNextRow(firstRow, secondRow, piece) && isAdjacentSpace(firstRow, firstCol, secondRow, secondCol)){
+            return true;
+    } else {
+        return false;
+    }
+}
+
+function isAdjacentSpace(firstRow, firstCol, secondRow, secondCol){
+    return Math.abs(secondCol - firstCol) === 1;
+}
+
+function isTwoSpaces(firstRow, firstCol, secondRow, secondCol){
+    return Math.abs(secondCol - firstCol) === 2;
+}
+
+function isNextRow(startingRow, endingRow, piece){
+    return piece === "R" && endingRow === startingRow + 1 ||
+        piece === "B" && endingRow === startingRow - 1;
+
+}
+
+function isTwoRows(startingRow, endingRow, piece){
+    return piece === "R" && endingRow === startingRow + 2 ||
+        piece === "B" && endingRow === startingRow - 2;
+}
+
+console.log(checkerboard);
+console.log("----------");
+// console.log(move(0, 0, 0, 1));
+// console.log(checkerboard);
+
+//more functions needed: isTurnOver(), kingMe(), kingMove();
+
+$(document).ready(function() {
+    drawBoard();
+});
