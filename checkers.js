@@ -1,3 +1,4 @@
+
 var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
@@ -67,21 +68,39 @@ function isOnePlayerGone() {
 }
 
 
-initializeBoard();
-
-
-function move(firstRow, firstCol, secondRow, secondCol){
-    if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
-        if (checkerboard[secondRow][secondCol] === null){
-            setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
-            setSquare(firstRow, firstCol, null);
+function move(firstRow, firstCol, secondRow, secondCol, piece){
+    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece)){
+        if (checkerboard[secondRow][secondCol] === null ){
+            if ((checkerboard[secondRow] !==7 && piece === 'R') || (checkerboard[secondRow] !==0 && piece === 'B')) {
+                    setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                    setSquare(firstRow, firstCol, null);
+                }
+            } else if (checkerboard[secondRow] === 7 && piece === 'R') {
+                setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                setSquare(firstRow, firstCol, null);
+            } else if (checkerboard[secondRow] === 0 && piece === 'B') {
+                setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                setSquare(firstRow, firstCol, null);
+            }
             return true;
         } else {
             return false;
         }
+        return false;
     }
-    return false;
+
+
+function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
+    var piece = checkerboard[firstRow][firstCol];
+    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(secondRow, secondCol))){
+        return false;
+    } else if (isAdjacentSpace(firstRow, firstCol, secondRow, secondCol)){
+            return true;
+    } else {
+        return false;
+    }
 }
+
 
 function jump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
     if (isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece)){
@@ -94,16 +113,6 @@ function jump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piec
         }
     }
 
-// function kingMe(piece, firstRow, firstCol, finalRow, finalCol){
-//     //is R on row 7? is B on row 0?
-//     //if finalRow in move is 7 for R or 0 for B, king
-//     //king piece is rKing or bKing
-
-// }
-
-// function validKing(piece, row){
-//     return piece === 'R' && checkerboard[row] === 7 || piece === 'B' && checkerboard[row] === 0;
-// }
 
 function isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
     return isJumpToSquareOpen(firstRow, firstCol, finalRow, finalCol, piece) &&
@@ -129,7 +138,8 @@ function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, endingRow, 
 function isOpponent(piece, row, col){
     if (checkerboard[row][col] === null) {
         return false;
-    } else if (piece === 'R' && checkerboard[row][col] === 'B' || piece === 'B' && checkerboard[row][col] === 'R'){
+    } else if ((piece === 'R' || piece === 'kR' && checkerboard[row][col] === 'B' || checkerboard[row][col]===
+        'bK') || (piece === 'B' || piece === 'bK' && checkerboard[row][col] === 'R' || checkerboard[row][col] === 'rK')){
         return true;
     } else {
         return false;
@@ -142,11 +152,35 @@ function isValidSquare(row, col){
 }
 
 function setSquare(row, col, value) {
+    var squareValue;
     if (isValidSquare(row, col)){
         checkerboard[row][col] = value;
-    return value;
-} else {
-    return "That's not a valid square, stupid!";
+        if (value === 'R' && row === 7) {
+            squareValue = 'Red King';
+            value = 'rK';
+        } else if (value === 'rK'){
+            value = 'rK';
+            squareValue = 'Red King';
+        } else if (value === 'B' && row === 0) {
+            squareValue = 'Black King';
+            value = 'bK';
+        } else if (value === 'bK') {
+            squareValue = 'bK';
+            value = 'bK';
+        } else if (value === 'R') {
+            squareValue = 'Red';
+            value = 'rK';
+        } else if (value === 'B'){
+            value = 'B';
+            squareValue = 'Black';
+        } else {
+            value = null;
+            squareValue = null;
+        }
+        $("#" + row + '_' + col).html(squareValue);
+        return value;
+    } else {
+        return "That's not a valid square, stupid!";
     }
 }
 
@@ -195,8 +229,8 @@ console.log("----------");
 // console.log(move(0, 0, 0, 1));
 // console.log(checkerboard);
 
-//more functions needed: isTurnOver(), kingMe(), kingMove();
 
 $(document).ready(function() {
     drawBoard();
+    initializeBoard();
 });
