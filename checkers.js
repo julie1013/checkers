@@ -81,7 +81,7 @@ function isOnePlayerGone() {
 
 
 function move(firstRow, firstCol, secondRow, secondCol, piece){
-    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece)){
+    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || (isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === 'rK' || piece === "bK")){
         if (checkerboard[secondRow][secondCol] === null ){
             if ((checkerboard[secondRow] !==7 && piece === 'R') || (checkerboard[secondRow] !==0 && piece === 'B')) {
                     setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
@@ -100,6 +100,7 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
         }
         return false;
     }
+//king pieces can't move at all
 
 
 function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
@@ -150,7 +151,7 @@ function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, endingRow, 
 function isOpponent(piece, row, col){
     if (checkerboard[row][col] === null) {
         return false;
-    } else if ((piece === 'R' || piece === 'kR' && checkerboard[row][col] === 'B' || checkerboard[row][col]===
+    } else if ((piece === 'R' || piece === 'rK' && checkerboard[row][col] === 'B' || checkerboard[row][col]===
         'bK') || (piece === 'B' || piece === 'bK' && checkerboard[row][col] === 'R' || checkerboard[row][col] === 'rK')){
         return true;
     } else {
