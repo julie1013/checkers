@@ -8,15 +8,27 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
 
+
 function initializeBoard() {
   for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
             if (row < 3){
                 setSquare(row, col, "R");
+                if (isValidSquare(row, col)){
+                    $("#" + row + '_' + col).on("click", function(){
+                        alert("hi");
+                    });
+                }
             } else if (row > 4){
                 setSquare(row, col, "B");
+                if (isValidSquare(row, col)){
+                    $("#" + row + '_' + col).on("click", function(){
+                        alert("hi");
+                    });
+                }
             } else {
                 setSquare(row, col, null);
+
             }
         }
     }
