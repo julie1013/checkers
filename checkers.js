@@ -184,8 +184,8 @@ function setSquare(row, col, value) {
             squareValue = 'bK';
             value = 'bK';
         } else if (value === 'R') {
+            value = 'R';
             squareValue = 'Red';
-            value = 'rK';
         } else if (value === 'B'){
             value = 'B';
             squareValue = 'Black';
