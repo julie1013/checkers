@@ -60,8 +60,8 @@ function scoreCount() {
         $("#redScore").html(redScoreCount);
     } else if (blackWin(countB)){
         $("#blackScore").html(blackScoreCount);
-        }
     }
+}
 
 
 function redWin(countR){
@@ -201,20 +201,20 @@ function setSquare(row, col, value) {
             squareValue = 'Red King';
             value = 'rK';
         } else if (value === 'rK'){
-            value = 'rK';
             squareValue = 'Red King';
+            value = 'rK';
         } else if (value === 'B' && row === 0) {
             squareValue = 'Black King';
             value = 'bK';
         } else if (value === 'bK') {
-            squareValue = 'bK';
+            squareValue = 'Black King';
             value = 'bK';
         } else if (value === 'R') {
-            value = 'R';
             squareValue = 'Red';
+            value = 'R';
         } else if (value === 'B'){
-            value = 'B';
             squareValue = 'Black';
+            value = 'B';
         } else {
             value = null;
             squareValue = null;
