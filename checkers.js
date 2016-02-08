@@ -8,7 +8,6 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
 
-
 function initializeBoard() {
   for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
@@ -16,14 +15,16 @@ function initializeBoard() {
                 setSquare(row, col, "R");
                 if (isValidSquare(row, col)){
                     $("#" + row + '_' + col).on("click", function(){
-                        alert("hi");
+                        $(this).addClass("selected");
+                        $(this).siblings().removeClass("selected");
                     });
                 }
             } else if (row > 4){
                 setSquare(row, col, "B");
                 if (isValidSquare(row, col)){
                     $("#" + row + '_' + col).on("click", function(){
-                        alert("hi");
+                      $(this).addClass("selected");
+                      $(this).siblings().removeClass("selected");
                     });
                 }
             } else {
@@ -33,6 +34,7 @@ function initializeBoard() {
         }
     }
 }
+
 
 
 function drawBoard() {
@@ -100,7 +102,8 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
         }
         return false;
     }
-//king pieces can't move at all
+//king pieces can't move at all because value doesn't change
+//setSquare doesn't seem to change the value
 
 
 function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
