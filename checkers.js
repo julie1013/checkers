@@ -8,6 +8,9 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
 
+var redScoreCount = 0;
+var blackScoreCount = 0;
+
 function initializeBoard() {
   for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
@@ -50,6 +53,29 @@ function drawBoard() {
 
         }
     }
+}
+
+function scoreCount() {
+    if (redWin(countR)){
+        $("#redScore").html(redScoreCount);
+    } else if (blackWin(countB)){
+        $("#blackScore").html(blackScoreCount);
+        }
+    }
+
+
+function redWin(countR){
+    if (isGameOver() && countR !== 0){
+        redScoreCount++;
+    }
+    return redScoreCount;
+}
+
+function blackWin(countB){
+    if (isGameOver() && countB !== 0) {
+        blackScoreCount++;
+    }
+    return blackScoreCount;
 }
 
 
