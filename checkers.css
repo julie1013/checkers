@@ -111,8 +111,27 @@ h2 {
   font-size: 50px;
 }
 
+
+
 #blackScoreBox {
   text-decoration: none;
   font-size: 50px;
   text-align: center;
+}
+
+.video {
+  border: 1px solid black;
+  width: 20%;
+  height: 200px;
+  margin-top: -425px;
+}
+
+#red {
+  float: left;
+  margin-left: 50px;
+}
+
+#black {
+  float: right;
+  margin-right: 50px;
 }
