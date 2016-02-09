@@ -10,6 +10,8 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
 
 var redScoreCount = 0;
 var blackScoreCount = 0;
+var redChecker;
+var blackChecker;
 
 function initializeBoard() {
   for (var row = 0; row < checkerboard.length; row++){
@@ -17,8 +19,8 @@ function initializeBoard() {
             if (row < 3){
                 setSquare(row, col, "R");
                 if (isValidSquare(row, col)){
-                    $("#" + row + '_' + col).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
-                    $("#" + row + '_' + col).on("click", function(){
+                    redChecker = $("#" + row + '_' + col).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+                    $(redChecker).on("click", function(){
                         $(this).addClass("selected");
                         $(this).siblings().removeClass("selected");
                     });
@@ -26,8 +28,8 @@ function initializeBoard() {
             } else if (row > 4){
                 setSquare(row, col, "B");
                 if (isValidSquare(row, col)){
-                    $("#" + row + '_' + col).html('<img src="' + "images/black.jpg" + '" style="width: 60px;"/>');
-                    $("#" + row + '_' + col).on("click", function(){
+                    blackChecker = $("#" + row + '_' + col).html('<img src="' + "images/black.jpg" + '" style="width: 60px;"/>');
+                    $(blackChecker).on("click", function(){
                       $(this).addClass("selected");
                       $(this).siblings().removeClass("selected");
                     });
