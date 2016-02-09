@@ -17,6 +17,7 @@ function initializeBoard() {
             if (row < 3){
                 setSquare(row, col, "R");
                 if (isValidSquare(row, col)){
+                    $("#" + row + '_' + col).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
                     $("#" + row + '_' + col).on("click", function(){
                         $(this).addClass("selected");
                         $(this).siblings().removeClass("selected");
@@ -25,6 +26,7 @@ function initializeBoard() {
             } else if (row > 4){
                 setSquare(row, col, "B");
                 if (isValidSquare(row, col)){
+                    $("#" + row + '_' + col).html('<img src="' + "images/black.jpg" + '" style="width: 60px;"/>');
                     $("#" + row + '_' + col).on("click", function(){
                       $(this).addClass("selected");
                       $(this).siblings().removeClass("selected");
@@ -109,7 +111,7 @@ function isOnePlayerGone() {
 
 
 function move(firstRow, firstCol, secondRow, secondCol, piece){
-    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || (isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === 'rK' || piece === "bK")){
+    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || (isValidKingMove(firstRow, firstCol, secondRow, secondCol, 'rK') && piece === 'rK' || isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === "bK")){
         if (checkerboard[secondRow][secondCol] === null ){
             if ((checkerboard[secondRow] !==7 && piece === 'R') || (checkerboard[secondRow] !==0 && piece === 'B')) {
                     setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
@@ -216,8 +218,8 @@ function setSquare(row, col, value) {
             squareValue = 'Black';
             value = 'B';
         } else {
-            value = null;
             squareValue = null;
+            value = null;
         }
         $("#" + row + '_' + col).html(squareValue);
         return value;
