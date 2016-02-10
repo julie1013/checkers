@@ -113,18 +113,25 @@ function isOnePlayerGone() {
 
 
 function move(firstRow, firstCol, secondRow, secondCol, piece){
-    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || (isValidKingMove(firstRow, firstCol, secondRow, secondCol, 'rK') && piece === 'rK' || isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === "bK")){
+    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || (isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === "rK" || isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === "bK")){
         if (checkerboard[secondRow][secondCol] === null ){
-            if ((checkerboard[secondRow] !==7 && piece === 'R') || (checkerboard[secondRow] !==0 && piece === 'B')) {
+            if ((checkerboard[secondRow] !==7 && piece === 'R')){
+                setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                setSquare(firstRow, firstCol, null);
+                $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+            } else if ((checkerboard[secondRow] !==0 && piece === 'B')) {
                     setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
                     setSquare(firstRow, firstCol, null);
+                    $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>');
                 }
             } else if (checkerboard[secondRow] === 7 && piece === 'R') {
                 setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
                 setSquare(firstRow, firstCol, null);
+                $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
             } else if (checkerboard[secondRow] === 0 && piece === 'B') {
                 setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
                 setSquare(firstRow, firstCol, null);
+                $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>');
             }
             return true;
         } else {
@@ -134,6 +141,7 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
     }
 //king pieces can't move at all because value doesn't change
 //setSquare doesn't seem to change the value
+//returns true if I try to move to an occupied space
 
 
 function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
@@ -151,6 +159,11 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
 function jump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
     if (isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece)){
         setSquare(finalRow, finalCol, checkerboard[firstRow][firstCol]);
+        if (checkerboard[finalRow][finalCol] === "R") {
+            $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+        } else if (checkerboard[finalRow][finalCol] === "B") {
+            $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>')
+        }
         setSquare(firstRow, firstCol, null);
         setSquare(secondRow, secondCol, null);
         return true;
