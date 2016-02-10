@@ -113,7 +113,7 @@ function isOnePlayerGone() {
 
 
 function move(firstRow, firstCol, secondRow, secondCol, piece){
-    if (isValidMove(firstRow, firstCol, secondRow, secondCol) || (isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === "rK" || isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece) && piece === "bK")){
+    if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
         if (checkerboard[secondRow][secondCol] === null ){
             if ((checkerboard[secondRow] !==7 && piece === 'R')){
                 setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
@@ -139,9 +139,23 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
         }
         return false;
     }
-//king pieces can't move at all because value doesn't change
-//setSquare doesn't seem to change the value
-//returns true if I try to move to an occupied space
+
+function kingMove(firstRow, firstCol, secondRow, secondCol, piece){
+    if(isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece)){
+        setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+        setSquare(firstRow, firstCol, null);
+        if (piece === 'rK'){
+            $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+            return true;
+        } else if (piece === 'bK'){
+            $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>');
+            return true;
+        } else if (piece !== 'rK' || piece !== 'bK') {
+            return false;
+            //why does it set square anyway?
+        }
+    }
+}
 
 
 function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
@@ -172,6 +186,28 @@ function jump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piec
         }
     }
 
+function kingJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
+    if (isValidKingJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece)){
+        setSquare(finalRow, finalCol, checkerboard[firstRow][firstCol]);
+        if (checkerboard[finalRow][finalCol] === "rK") {
+            $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+        } else if (checkerboard[finalRow][finalCol] === "bK") {
+            $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>')
+        }
+        setSquare(firstRow, firstCol, null);
+        setSquare(secondRow, secondCol, null);
+        return true;
+        } else {
+            return false;
+        }
+    }
+
+function isValidKingJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
+     return isJumpToSquareOpenKing(firstRow, firstCol, finalRow, finalCol, piece) &&
+    isOpponentOnJumpOverSquareKing(piece, firstRow, firstCol, secondRow, secondCol) &&
+    isValidSquare(finalRow, finalCol);
+}
+
 
 function isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
     return isJumpToSquareOpen(firstRow, firstCol, finalRow, finalCol, piece) &&
@@ -188,11 +224,22 @@ function isJumpToSquareOpen(firstRow, firstCol, secondRow, secondCol, piece){
     }
 }
 
+function isJumpToSquareOpenKing(firstRow, firstCol, secondRow, secondCol, piece){
+   if (checkerboard[secondRow][secondCol] === null && isTwoSpaces(firstRow, firstCol, secondRow, secondCol) && isTwoRowsKing(firstRow, secondRow, piece)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, endingRow, endingCol){
     return isNextRow(startingRow, endingRow, piece) && isAdjacentSpace(startingRow, startingCol, endingRow, endingCol, piece)
         && isOpponent(piece, endingRow, endingCol);
     }
 
+function isOpponentOnJumpOverSquareKing(piece, startingRow, startingCol, endingRow, endingCol){
+    return isNextRowKing(startingRow, endingRow, piece) && isAdjacentSpace(startingRow, startingCol, endingRow, endingCol, piece) && isOpponent(piece, endingRow, endingCol);
+}
 
 function isOpponent(piece, row, col){
     if (checkerboard[row][col] === null) {
@@ -278,9 +325,17 @@ function isNextRow(startingRow, endingRow, piece){
 
 }
 
+function isNextRowKing(startingRow, endingRow, piece){
+    return (piece === 'rK' || piece === 'bK') && Math.abs(endingRow - startingRow) === 1;
+}
+
 function isTwoRows(startingRow, endingRow, piece){
     return piece === "R" && endingRow === startingRow + 2 ||
         piece === "B" && endingRow === startingRow - 2;
+}
+
+function isTwoRowsKing(startingRow, endingRow, piece){
+    return (piece === "rK" || piece === "bK") && Math.abs(endingRow - startingRow) === 2;
 }
 
 console.log(checkerboard);
@@ -293,3 +348,6 @@ $(document).ready(function() {
     drawBoard();
     initializeBoard();
 });
+
+//returns true if I try to move to an occupied space
+//reverts to "red" or "black" instead of king-specified piece after jump
