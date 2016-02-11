@@ -125,11 +125,11 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
                     $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>');
                 }
             } else if (checkerboard[secondRow] === 7 && piece === 'R') {
-                setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                setSquare(secondRow, secondCol, checkerboard[7][secondCol]);
                 setSquare(firstRow, firstCol, null);
                 $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
             } else if (checkerboard[secondRow] === 0 && piece === 'B') {
-                setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                setSquare(secondRow, secondCol, checkerboard[0][secondCol]);
                 setSquare(firstRow, firstCol, null);
                 $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>');
             }
@@ -152,7 +152,6 @@ function kingMove(firstRow, firstCol, secondRow, secondCol, piece){
             return true;
         } else if (piece !== 'rK' || piece !== 'bK') {
             return false;
-            //why does it set square anyway?
         }
     }
 }
@@ -173,9 +172,9 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
 function jump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
     if (isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece)){
         setSquare(finalRow, finalCol, checkerboard[firstRow][firstCol]);
-        if (checkerboard[finalRow][finalCol] === "R") {
+        if (checkerboard[finalRow][finalCol] === "R" || checkerboard[finalRow][finalCol] === "rK") {
             $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
-        } else if (checkerboard[finalRow][finalCol] === "B") {
+        } else if (checkerboard[finalRow][finalCol] === "B" || checkerboard[finalRow][finalCol] === "bK") {
             $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>')
         }
         setSquare(firstRow, firstCol, null);
@@ -260,7 +259,7 @@ function isValidSquare(row, col){
 function setSquare(row, col, value) {
     var squareValue;
     if (isValidSquare(row, col)){
-        checkerboard[row][col] = value;
+        //checkerboard[row][col] = value;
         if (value === 'R' && row === 7) {
             squareValue = 'Red King';
             value = 'rK';
@@ -284,6 +283,7 @@ function setSquare(row, col, value) {
             value = null;
         }
         $("#" + row + '_' + col).html(squareValue);
+        checkerboard[row][col] = value;
         return value;
     } else {
         return "That's not a valid square, stupid!";
@@ -350,4 +350,4 @@ $(document).ready(function() {
 });
 
 //returns true if I try to move to an occupied space
-//reverts to "red" or "black" instead of king-specified piece after jump
+//need to refactor some stuff
