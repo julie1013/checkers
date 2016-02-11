@@ -19,11 +19,7 @@ function initializeBoard() {
             if (row < 3){
                 setSquare(row, col, "R");
                 if (isValidSquare(row, col)){
-                    redChecker = $("#" + row + '_' + col).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
-                    $(redChecker).on("click", function(){
-                        $(this).addClass("selected");
-                        $(this).siblings().removeClass("selected");
-                    });
+                    redChecker = $("#" + row + '_' + col).html('<img src="images/red.jpg" style="width: 60px;" class="redChecker"/>');
                 }
             } else if (row > 4){
                 setSquare(row, col, "B");
@@ -118,7 +114,7 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
             if ((checkerboard[secondRow] !==7 && piece === 'R')){
                 setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
                 setSquare(firstRow, firstCol, null);
-                $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+                $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 60px;" class="redChecker"/>');
             } else if ((checkerboard[secondRow] !==0 && piece === 'B')) {
                     setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
                     setSquare(firstRow, firstCol, null);
@@ -127,7 +123,7 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
             } else if (checkerboard[secondRow] === 7 && piece === 'R') {
                 setSquare(secondRow, secondCol, checkerboard[7][secondCol]);
                 setSquare(firstRow, firstCol, null);
-                $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+                $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 60px;" class="redChecker"/>');
             } else if (checkerboard[secondRow] === 0 && piece === 'B') {
                 setSquare(secondRow, secondCol, checkerboard[0][secondCol]);
                 setSquare(firstRow, firstCol, null);
@@ -347,6 +343,22 @@ console.log("----------");
 $(document).ready(function() {
     drawBoard();
     initializeBoard();
+     $(".redChecker").on("click", function(){
+        $(this).parent().addClass("selected");
+        $(this).parent().siblings().removeClass("selected");
+    });
+   $("#checkerboard div").on("click", function(){
+      var pieceRow = $(".selected").data("row");
+      var pieceCol = $(".selected").data("col");
+      var secondPieceRow = $(this).data("row");
+      var secondPieceCol = $(this).data("col");
+        if (checkerboard[secondPieceRow][secondPieceCol] === null){
+          move(pieceRow, pieceCol, secondPieceRow, secondPieceCol, "R");
+          console.log(pieceRow, pieceCol, secondPieceRow, secondPieceCol, "R");
+          // $("#checkerboard div").removeClass("selected");
+          // figure out how to make sure pieceRow and pieceCol are never null.
+        }
+    });
 });
 
 //returns true if I try to move to an occupied space
