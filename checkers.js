@@ -343,7 +343,7 @@ console.log("----------");
 $(document).ready(function() {
     drawBoard();
     initializeBoard();
-     $(".redChecker").on("click", function(){
+     $("#checkerboard").on("click", ".redChecker", function(){
         $(this).parent().addClass("selected");
         $(this).parent().siblings().removeClass("selected");
     });
