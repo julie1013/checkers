@@ -109,14 +109,11 @@ function isOnePlayerGone() {
 function move(firstRow, firstCol, secondRow, secondCol, piece){
     if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
         if (checkerboard[secondRow][secondCol] === null ){
-             console.log(checkerboard[secondRow]);
             if ((secondRow !==7 && piece === 'R')){
                 setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
                 setSquare(firstRow, firstCol, null);
                 $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 60px" class="redChecker"/>');
             } else if ((secondRow !==0 && piece === 'B')) {
-
-
                     setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
                     setSquare(firstRow, firstCol, null);
                     $("#" + secondRow + '_' + secondCol).html('<img src="images/black.jpg" style="width: 65px" class="blackChecker"/>');
@@ -139,16 +136,18 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
 
 function kingMove(firstRow, firstCol, secondRow, secondCol, piece){
     if(isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece)){
-        setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
-        setSquare(firstRow, firstCol, null);
-        if (piece === 'rK'){
-            $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
-            return true;
-        } else if (piece === 'bK'){
-            $("#" + secondRow + '_' + secondCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>');
-            return true;
-        } else if (piece !== 'rK' || piece !== 'bK') {
-            return false;
+        if (checkerboard[secondRow][secondCol] === null ){
+            setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+            setSquare(firstRow, firstCol, null);
+            if (piece === 'rK'){
+                $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 65px" class="redKing"/>');
+                return true;
+            } else if (piece === 'bK'){
+                $("#" + secondRow + '_' + secondCol).html('<img src="images/black.jpg" style="width: 65px" class="blackKing"/>');
+                return true;
+            } else if (piece !== 'rK' || piece !== 'bK') {
+                return false;
+            }
         }
     }
 }
@@ -166,16 +165,16 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
 }
 
 
-function jump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
-    if (isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece)){
-        setSquare(finalRow, finalCol, checkerboard[firstRow][firstCol]);
-        if (checkerboard[finalRow][finalCol] === "R" || checkerboard[finalRow][finalCol] === "rK") {
-            $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
-        } else if (checkerboard[finalRow][finalCol] === "B" || checkerboard[finalRow][finalCol] === "bK") {
-            $("#" + finalRow + '_' + finalCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>')
+function jump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
+    if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
+        setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
+        if (checkerboard[jumpToRow][jumpToCol] === "R" || checkerboard[jumpToRow][jumpToCol] === "rK") {
+            $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
+        } else if (checkerboard[jumpToRow][jumpToCol] === "B" || checkerboard[jumpToRow][jumpToCol] === "bK") {
+            $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>')
         }
         setSquare(firstRow, firstCol, null);
-        setSquare(secondRow, secondCol, null);
+        setSquare(jumpToRow-1, jumpToCol-1, null);
         return true;
         } else {
             return false;
@@ -205,15 +204,15 @@ function isValidKingJump(firstRow, firstCol, secondRow, secondCol, finalRow, fin
 }
 
 
-function isValidJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
-    return isJumpToSquareOpen(firstRow, firstCol, finalRow, finalCol, piece) &&
-    isOpponentOnJumpOverSquare(piece, firstRow, firstCol, secondRow, secondCol) &&
-    isValidSquare(finalRow, finalCol);
+function isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
+    return isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece) &&
+    isOpponentOnJumpOverSquare(piece, firstRow, firstCol, jumpToRow-1, jumpToCol-1) &&
+    isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2 && jumpToCol === firstCol + 2;
 }
 
 
-function isJumpToSquareOpen(firstRow, firstCol, secondRow, secondCol, piece){
-    if (checkerboard[secondRow][secondCol] === null && isTwoSpaces(firstRow, firstCol, secondRow, secondCol) && isTwoRows(firstRow, secondRow, piece)){
+function isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece){
+    if (checkerboard[jumpToRow][jumpToCol] === null && isTwoSpaces(firstRow, firstCol, jumpToRow, jumpToCol) && isTwoRows(firstRow, jumpToRow, piece)){
         return true;
     } else {
         return false;
@@ -256,7 +255,6 @@ function isValidSquare(row, col){
 function setSquare(row, col, piece) {
     var squareValue;
     if (isValidSquare(row, col)){
-        //checkerboard[row][col] = value;
         if (piece === 'R' && row === 7) {
             squareValue = 'Red King';
             piece = 'rK';
