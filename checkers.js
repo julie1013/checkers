@@ -166,20 +166,25 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
 
 
 function jump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-    if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
+    if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece) && piece === "R" || piece === "rK"){
         setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
-        if (checkerboard[jumpToRow][jumpToCol] === "R" || checkerboard[jumpToRow][jumpToCol] === "rK") {
-            $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
-        } else if (checkerboard[jumpToRow][jumpToCol] === "B" || checkerboard[jumpToRow][jumpToCol] === "bK") {
-            $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>')
-        }
+        $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px;"/>');
         setSquare(firstRow, firstCol, null);
         setSquare(jumpToRow-1, jumpToCol-1, null);
-        return true;
+            return true;
+    } else if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece) && piece === "B" || piece === "bk"){
+        setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
+        $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px;"/>')
+        setSquare(firstRow, firstCol, null);
+        setSquare(jumpToRow+1, jumpToCol+1, null);
+            return true;
         } else {
             return false;
         }
     }
+
+
+
 
 function kingJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece){
     if (isValidKingJump(firstRow, firstCol, secondRow, secondCol, finalRow, finalCol, piece)){
@@ -205,9 +210,15 @@ function isValidKingJump(firstRow, firstCol, secondRow, secondCol, finalRow, fin
 
 
 function isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-    return isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece) &&
-    isOpponentOnJumpOverSquare(piece, firstRow, firstCol, jumpToRow-1, jumpToCol-1) &&
-    isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2 && jumpToCol === firstCol + 2;
+        if (isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
+            if ((isOpponentOnJumpOverSquare("R", firstRow, firstCol, jumpToRow - 1, jumpToCol - 1) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2 && jumpToCol === firstCol + 2)){
+                return true;
+            } else if (isOpponentOnJumpOverSquare("B", firstRow, firstCol, jumpToRow + 1, jumpToCol + 1) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow - 2 && jumpToCol === firstCol - 2){
+                return true;
+            }
+        } else {
+        return false;
+    }
 }
 
 
