@@ -157,7 +157,7 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
     var piece = checkerboard[firstRow][firstCol];
     if (!(isValidSquare(firstRow, firstCol) && isValidSquare(secondRow, secondCol))){
         return false;
-    } else if (isAdjacentSpace(firstRow, firstCol, secondRow, secondCol)){
+    } else if (isValidSquare(firstRow, firstCol) && isAdjacentSpace(firstRow, firstCol, secondRow, secondCol)){
             return true;
     } else {
         return false;
@@ -238,10 +238,11 @@ function isJumpToSquareOpenKing(firstRow, firstCol, secondRow, secondCol, piece)
     }
 }
 
-function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, endingRow, endingCol){
-    return isNextRow(startingRow, endingRow, piece) && isAdjacentSpace(startingRow, startingCol, endingRow, endingCol, piece)
-        && isOpponent(piece, endingRow, endingCol);
+function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, jumpToRow, jumpToCol){
+    return isNextRow(startingRow, jumpToCol, piece) && isAdjacentSpace(startingRow, startingCol, jumpToRow, endingCol, piece)
+        && isOpponent(piece, jumpToRow, jumpToCol);
     }
+    //doesn't work
 
 function isOpponentOnJumpOverSquareKing(piece, startingRow, startingCol, endingRow, endingCol){
     return isNextRowKing(startingRow, endingRow, piece) && isAdjacentSpace(startingRow, startingCol, endingRow, endingCol, piece) && isOpponent(piece, endingRow, endingCol);
@@ -353,37 +354,32 @@ console.log("----------");
 $(document).ready(function() {
     drawBoard();
     initializeBoard();
-     $("#checkerboard").on("click", ".redChecker", function(){
-        piece = "R";
-        $(this).parent().addClass("selected");
-        $(this).parent().siblings().removeClass("selected");
-    });
+    $("#checkerboard div").on("click", function(event){
+        var pieceRow = $(".selected").data("row");
+        var pieceCol = $(".selected").data("col");
 
-     $("#checkerboard").on("click", ".redKing", function(){
-        piece = "rK";
-        $(this).parent().addClass("selected");
-        $(this).parent().siblings().removeClass("selected");
-    });
+        if ($(event.target).find(".blackKing").length !==0){
+            piece = "bK";
+            $(event.target).addClass("selected");
+            $(event.target).siblings().removeClass("selected");
+       } else if ($(event.target).find(".redKing").length !==0){
+            piece = "rK";
+            $(event.target).addClass("selected");
+            $(event.target).siblings().removeClass("selected");
+       } else if ($(event.target).find(".redChecker").length !==0){
+            piece = "R";
+            $(event.target).addClass("selected");
+            $(event.target).siblings().removeClass("selected");
+       } else if ($(event.target).find(".blackChecker").length !==0){
+            piece = "B";
+            $(event.target).addClass("selected");
+            $(event.target).siblings().removeClass("selected");
+       }
 
-    $("#checkerboard").on("click", ".blackChecker", function(){
-        piece = "B";
-        $(this).parent().addClass("selected");
-        $(this).parent().siblings().removeClass("selected");
-    });
+        var secondPieceRow = $(event.target).data("row");
+        var secondPieceCol = $(event.target).data("col");
 
-     $("#checkerboard").on("click", ".blackKing", function(){
-        piece = "bK";
-        $(this).parent().addClass("selected");
-        $(this).parent().siblings().removeClass("selected");
-    });
-
-   $("#checkerboard div").on("click", function(){
-      var pieceRow = $(".selected").data("row");
-      var pieceCol = $(".selected").data("col");
-      var secondPieceRow = $(this).data("row");
-      var secondPieceCol = $(this).data("col");
         if ((piece === "R" || piece === "B") && checkerboard[secondPieceRow][secondPieceCol] === null){
-
           move(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
         } else if ((piece === "rK" || piece === "bK") && checkerboard[secondPieceRow][secondPieceCol] === null){
             kingMove(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
