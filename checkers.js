@@ -211,9 +211,9 @@ function isValidKingJump(firstRow, firstCol, secondRow, secondCol, finalRow, fin
 
 function isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
         if (isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
-            if ((isOpponentOnJumpOverSquare("R", firstRow, firstCol, jumpToRow - 1, jumpToCol - 1) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2 && jumpToCol === firstCol + 2)){
+            if ((isOpponentOnJumpOverSquare("R", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2 && jumpToCol === firstCol + 2)){
                 return true;
-            } else if (isOpponentOnJumpOverSquare("B", firstRow, firstCol, jumpToRow + 1, jumpToCol + 1) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow - 2 && jumpToCol === firstCol - 2){
+            } else if ((isOpponentOnJumpOverSquare("B", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow - 2 && jumpToCol === firstCol - 2)){
                 return true;
             }
         } else {
@@ -239,8 +239,14 @@ function isJumpToSquareOpenKing(firstRow, firstCol, secondRow, secondCol, piece)
 }
 
 function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, jumpToRow, jumpToCol){
-    return isNextRow(startingRow, jumpToCol, piece) && isAdjacentSpace(startingRow, startingCol, jumpToRow, endingCol, piece)
-        && isOpponent(piece, jumpToRow, jumpToCol);
+    console.log(startingRow, startingCol, jumpToRow, jumpToCol);
+    if(piece === "R" && isNextRow(startingRow, jumpToRow-1, piece) && isAdjacentSpace(startingRow, startingCol, jumpToRow-1, jumpToCol-1, piece) && isOpponent(piece, jumpToRow-1, jumpToCol-1)){
+        return true;
+    } else if (piece === "B" && isNextRow(startingRow, jumpToRow+1, piece) && isAdjacentSpace(startingRow, startingCol, jumpToRow+1, jumpToCol+1, piece) && isOpponent(piece, jumpToRow+1, jumpToCol+1)){
+        return true;
+        } else {
+            return false;
+        }
     }
     //doesn't work
 
@@ -357,28 +363,26 @@ $(document).ready(function() {
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
-
-        if ($(event.target).find(".blackKing").length !==0){
+        if ($(this).find(".blackKing").length !==0){
             piece = "bK";
-            $(event.target).addClass("selected");
-            $(event.target).siblings().removeClass("selected");
-       } else if ($(event.target).find(".redKing").length !==0){
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
+       } else if ($(this).find(".redKing").length !==0){
             piece = "rK";
-            $(event.target).addClass("selected");
-            $(event.target).siblings().removeClass("selected");
-       } else if ($(event.target).find(".redChecker").length !==0){
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
+       } else if ($(this).find(".redChecker").length !==0){
             piece = "R";
-            $(event.target).addClass("selected");
-            $(event.target).siblings().removeClass("selected");
-       } else if ($(event.target).find(".blackChecker").length !==0){
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
+       } else if ($(this).find(".blackChecker").length !==0){
             piece = "B";
-            $(event.target).addClass("selected");
-            $(event.target).siblings().removeClass("selected");
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
        }
 
-        var secondPieceRow = $(event.target).data("row");
-        var secondPieceCol = $(event.target).data("col");
-
+        var secondPieceRow = $(this).data("row");
+        var secondPieceCol = $(this).data("col");
         if ((piece === "R" || piece === "B") && checkerboard[secondPieceRow][secondPieceCol] === null){
           move(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
         } else if ((piece === "rK" || piece === "bK") && checkerboard[secondPieceRow][secondPieceCol] === null){
