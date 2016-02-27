@@ -168,7 +168,6 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
 
 
 function jump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-    findMiddleCol(firstCol, jumpToCol);
     if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece) && piece === "R"){
         setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
        if (jumpToRow !==7) {
@@ -196,8 +195,6 @@ function jump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
 
 
 function kingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-        findMiddleRow(firstRow, jumpToRow);
-        findMiddleCol(firstCol, jumpToCol);
     if (isValidKingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
         setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
         if (piece === "rK") {
@@ -248,9 +245,9 @@ function isValidKingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
 
 function isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
         if (isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
-            if (isOpponentOnJumpOverSquare("R", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2 && (jumpToCol === firstCol + 2 || jumpToCol === firstCol - 2)){
+            if (isOpponentOnJumpOverSquare("R", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2){
                 return true;
-            } else if (isOpponentOnJumpOverSquare("B", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow - 2 && (jumpToCol === firstCol + 2 || jumpToCol === firstCol - 2)){
+            } else if (isOpponentOnJumpOverSquare("B", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow - 2){
                 return true;
             }
         } else {
@@ -276,9 +273,10 @@ function isJumpToSquareOpenKing(firstRow, firstCol, jumpToRow, jumpToCol, piece)
 }
 
 function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, jumpToRow, jumpToCol){
-    if(piece === "R" && isNextRow(startingRow, jumpToRow-1, piece) && isAdjacentSpace(startingRow, startingCol, jumpToRow-1, jumpToCol-1) && isOpponent(piece, jumpToRow-1, jumpToCol-1)){
+    findMiddleCol(startingCol, jumpToCol);
+    if(piece === "R" && isNextRow(startingRow, jumpToRow-1, piece) && isOpponent(piece, jumpToRow-1, middleCol)){
         return true;
-    } else if (piece === "B" && isNextRow(startingRow, jumpToRow+1, piece) && isAdjacentSpace(startingRow, startingCol, jumpToRow+1, jumpToCol+1) && isOpponent(piece, jumpToRow+1, jumpToCol+1)){
+    } else if (piece === "B" && isNextRow(startingRow, jumpToRow+1, piece) && isOpponent(piece, jumpToRow+1, middleCol)){
         return true;
         } else {
             return false;
@@ -286,16 +284,17 @@ function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, jumpToRow, 
     }
 
 function isOpponentOnJumpOverSquareKing(piece, firstRow, firstCol, jumpToRow, jumpToCol){
-    if ((piece === "rK" || piece === "bK") && (isNextRowKing(firstRow, jumpToRow-1, piece)) || isNextRowKing(firstRow, jumpToRow+1, piece)){
-        if(isAdjacentSpace(firstRow, firstCol, jumpToRow-1, jumpToRow-1) || isAdjacentSpace(firstRow, firstCol, jumpToRow+1, jumpToCol+1)){
-            if (isOpponent(piece, jumpToRow-1, jumpToCol-1) || isOpponent(piece, jumpToRow+1, jumpToCol+1)){
-                return true;
-            } else {
-                return false;
-            }
+    findMiddleRow(firstRow, jumpToRow);
+    findMiddleCol(firstCol, jumpToCol);
+if ((piece === "rK" || piece === "bK") && isNextRowKing(firstRow, middleRow, piece)){
+        if (isOpponent(piece, middleRow, middleCol)){
+            return true;
+        } else {
+            return false;
         }
     }
 }
+
 
 
 function isOpponent(piece, row, col){
