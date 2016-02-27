@@ -168,7 +168,7 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
 
 
 function jump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-    middleCol(firstCol, jumpToCol);
+    findMiddleCol(firstCol, jumpToCol);
     if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece) && piece === "R"){
         setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
        if (jumpToRow !==7) {
@@ -196,8 +196,8 @@ function jump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
 
 
 function kingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-        middleRow(firstRow, jumpToRow);
-        middleCol(firstCol, jumpToCol);
+        findMiddleRow(firstRow, jumpToRow);
+        findMiddleCol(firstCol, jumpToCol);
     if (isValidKingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
         setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
         if (piece === "rK") {
@@ -213,7 +213,7 @@ function kingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
         }
     }
 
-function middleRow(firstRow, jumpToRow){
+function findMiddleRow(firstRow, jumpToRow){
     if (firstRow + 1 === jumpToRow - 1) {
         middleRow = firstRow + 1;
     } else if (firstRow - 1 === jumpToRow + 1){
@@ -224,7 +224,7 @@ function middleRow(firstRow, jumpToRow){
     return middleRow;
 }
 
-function middleCol(firstCol, jumpToCol){
+function findMiddleCol(firstCol, jumpToCol){
     if (firstCol + 1 === jumpToCol - 1){
         middleCol = firstCol + 1;
     } else if (firstCol - 1 === jumpToCol + 1){
