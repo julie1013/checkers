@@ -112,19 +112,19 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
     if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
         if (checkerboard[secondRow][secondCol] === null ){
             if ((secondRow !==7 && piece === 'R')){
-                setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                setSquare(secondRow, secondCol, 'R');
                 setSquare(firstRow, firstCol, null);
                 $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 60px" class="redChecker"/>');
             } else if ((secondRow !==0 && piece === 'B')) {
-                    setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+                    setSquare(secondRow, secondCol, 'B');
                     setSquare(firstRow, firstCol, null);
                     $("#" + secondRow + '_' + secondCol).html('<img src="images/black.jpg" style="width: 65px" class="blackChecker"/>');
             } else if (secondRow === 7 && piece === 'R') {
-                setSquare(secondRow, secondCol, checkerboard[7][secondCol]);
+                setSquare(secondRow, secondCol, 'rK');
                 setSquare(firstRow, firstCol, null);
                 $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 60px" class="redKing"/>');
             } else if (secondRow === 0 && piece === 'B') {
-                setSquare(secondRow, secondCol, checkerboard[0][secondCol]);
+                setSquare(secondRow, secondCol, 'bK');
                 setSquare(firstRow, firstCol, null);
                 $("#" + secondRow + '_' + secondCol).html('<img src="images/black.jpg" style="width: 65px" class="blackKing"/>');
             }
@@ -302,10 +302,10 @@ function isOpponent(piece, row, col){
     console.log(checkerboard[row][col]);
     if (checkerboard[row][col] === null) {
         return false;
-    } else if ((piece === 'R' || piece === 'rK') && (checkerboard[row][col] === 'B' || checkerboard[row][col]===
-        'bK')) {
+    } else if ((piece === "R" || piece === "rK") && (checkerboard[row][col] === "B" || checkerboard[row][col]===
+        "bK")) {
         return true;
-    } else if ((piece === 'B' || piece === 'bK') && (checkerboard[row][col] === 'R' || checkerboard[row][col] === 'rK')){
+    } else if ((piece === "B" || piece === "bK") && (checkerboard[row][col] === "R" || checkerboard[row][col] === "rK")){
         return true;
     } else {
         return false;
@@ -427,7 +427,6 @@ $(document).ready(function() {
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
        }
-
         var secondPieceRow = $(this).data("row");
         var secondPieceCol = $(this).data("col");
         if ((piece === "R" || piece === "B") && checkerboard[secondPieceRow][secondPieceCol] === null){
