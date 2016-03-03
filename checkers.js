@@ -302,26 +302,19 @@ $(document).ready(function() {
         var pieceCol = $(".selected").data("col");
         if ($(this).find(".blackKing").length !==0){
             piece = "bK";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
        } else if ($(this).find(".redKing").length !==0){
             piece = "rK";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
        } else if ($(this).find(".redChecker").length !==0){
             piece = "R";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
        } else if ($(this).find(".blackChecker").length !==0){
             piece = "B";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
        }
-        var secondPieceRow = $(this).data("row");
-        var secondPieceCol = $(this).data("col");
-        if (checkerboard[secondPieceRow][secondPieceCol] === null){
-          move(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
+        $(this).addClass("selected");
+        $(this).siblings().removeClass("selected");
+        var endingPieceRow = $(this).data("row");
+        var endingPieceCol = $(this).data("col");
+        if (checkerboard[endingPieceRow][endingPieceCol] === null){
+          move(pieceRow, pieceCol, endingPieceRow, endingPieceCol, piece);
         }
-        console.log(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
     });
 });
