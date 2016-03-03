@@ -101,12 +101,12 @@ function isOnePlayerGone() {
 }
 
 
-function move(firstRow, firstCol, secondRow, secondCol, piece){
-    if (isKing(piece) && isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece)){
-        kingMove(firstRow, firstCol, secondRow, secondCol, piece);
-    } else if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
-            piece = checkForPromotion(secondRow, secondCol, piece);
-            setSquare(secondRow, secondCol, piece);
+function move(firstRow, firstCol, endingRow, endingCol, piece){
+    if (isKing(piece) && isValidKingMove(firstRow, firstCol, endingRow, endingCol, piece)){
+        kingMove(firstRow, firstCol, endingRow, endingCol, piece);
+    } else if (isValidMove(firstRow, firstCol, endingRow, endingCol)){
+            piece = checkForPromotion(endingRow, endingCol, piece);
+            setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
             return true;
         } else {
@@ -116,10 +116,10 @@ function move(firstRow, firstCol, secondRow, secondCol, piece){
 
 
 
-function checkForPromotion(secondRow, secondCol, piece){
-    if (secondRow === 7 && isRed(piece)){
+function checkForPromotion(endingRow, endingCol, piece){
+    if (endingRow === 7 && isRed(piece)){
         piece = "rK";
-   } else if (secondRow === 0 && isBlack(piece)){
+   } else if (endingRow === 0 && isBlack(piece)){
         piece = "bK";
    } return piece;
 }
@@ -137,27 +137,23 @@ function isKing(piece){
     return (piece ==="rK" || piece === "bK");
 }
 
-function kingMove(firstRow, firstCol, secondRow, secondCol, piece){
-        if (checkerboard[secondRow][secondCol] === null ){
-            setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
+function kingMove(firstRow, firstCol, endingRow, endingCol, piece){
+    if (isKing(piece)){
+        if (checkerboard[endingRow][endingCol] === null ){
+            setSquare(endingRow, endingCol, checkerboard[firstRow][firstCol]);
             setSquare(firstRow, firstCol, null);
-            if (piece === 'rK'){
-                $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 65px" class="redKing"/>');
                 return true;
-            } else if (piece === 'bK'){
-                $("#" + secondRow + '_' + secondCol).html('<img src="images/black.jpg" style="width: 65px" class="blackKing"/>');
-                return true;
-            } else if (piece !== 'rK' || piece !== 'bK') {
+            } else {
                 return false;
             }
         }
     }
 
-function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
-    var piece = checkerboard[firstRow][firstCol];
-    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(secondRow, secondCol))){
+function isValidKingMove(firstRow, firstCol, endingRow, endingCol, piece){
+    piece = checkerboard[firstRow][firstCol];
+    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(endingRow, endingCol))){
         return false;
-    } else if (isValidSquare(firstRow, firstCol) && isAdjacentSpace(firstRow, firstCol, secondRow, secondCol)){
+    } else if (isValidSquare(firstRow, firstCol) && isAdjacentSpace(firstRow, firstCol, endingRow, endingCol)){
             return true;
     } else {
         return false;
@@ -165,53 +161,22 @@ function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
 }
 
 
-function jump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-    if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece) && piece === "R"){
-        setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
-       if (jumpToRow !==7) {
-        $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px" class="redChecker"/>');
-    } else if (jumpToRow === 7) {
-        $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px" class="redKing"/>');
-    }
-        setSquare(firstRow, firstCol, null);
-        setSquare(jumpToRow-1, middleCol, null);
-            return true;
-    } else if (isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece) && piece === "B"){
-        setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
-        if (jumpToRow !== 0) {
-        $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px" class="blackChecker"/>');
-       } else if (jumpToRow === 0) {
-            $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px" class="blackKing"/>');
-        }
-        setSquare(firstRow, firstCol, null);
-        setSquare(jumpToRow+1, middleCol, null);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-function kingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-    if (isValidKingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
-        setSquare(jumpToRow, jumpToCol, checkerboard[firstRow][firstCol]);
-        if (piece === "rK") {
-            $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/red.jpg" + '" style="width: 60px" class="redKing"/>');
-        } else if (piece === "bK") {
-            $("#" + jumpToRow + '_' + jumpToCol).html('<img src="' + "images/black.jpg" + '" style="width: 65px" class="blackKing"/>')
-        }
+function jump(firstRow, firstCol, endingRow, endingCol, piece){
+    if (isValidJump(firstRow, firstCol, endingRow, endingCol, piece)){
+        setSquare(endingRow, endingCol, checkerboard[firstRow][firstCol]);
         setSquare(firstRow, firstCol, null);
         setSquare(middleRow, middleCol, null);
-        return true;
+            return true;
         } else {
             return false;
         }
     }
 
-function findMiddleRow(firstRow, jumpToRow){
-    if (firstRow + 1 === jumpToRow - 1) {
+
+function findMiddleRow(firstRow, endingRow){
+    if (firstRow + 1 === endingRow - 1) {
         middleRow = firstRow + 1;
-    } else if (firstRow - 1 === jumpToRow + 1){
+    } else if (firstRow - 1 === endingRow + 1){
         middleRow = firstRow - 1;
     } else {
         return false;
@@ -219,10 +184,10 @@ function findMiddleRow(firstRow, jumpToRow){
     return middleRow;
 }
 
-function findMiddleCol(firstCol, jumpToCol){
-    if (firstCol + 1 === jumpToCol - 1){
+function findMiddleCol(firstCol, endingCol){
+    if (firstCol + 1 === endingCol - 1){
         middleCol = firstCol + 1;
-    } else if (firstCol - 1 === jumpToCol + 1){
+    } else if (firstCol - 1 === endingCol + 1){
         middleCol = firstCol - 1;
     } else {
         return false;
@@ -230,74 +195,24 @@ function findMiddleCol(firstCol, jumpToCol){
     return middleCol;
 }
 
-function isValidKingJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-     if (isJumpToSquareOpenKing(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
-        if((isOpponentOnJumpOverSquareKing(piece, firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol))){
-            return true;
-        }
-     } else {
-        return false;
-     }
+
+function isValidJump(firstRow, firstCol, endingRow, endingCol, piece){
+    return (isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && isValidSquare(endingRow, endingCol) && isTwoRows(firstRow, endingRow, piece));
 }
 
 
-function isValidJump(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-        if (isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece)){
-            if (isOpponentOnJumpOverSquare("R", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow + 2){
-                return true;
-            } else if (isOpponentOnJumpOverSquare("B", firstRow, firstCol, jumpToRow, jumpToCol) && isValidSquare(jumpToRow, jumpToCol) && jumpToRow === firstRow - 2){
-                return true;
-            }
-        } else {
-        return false;
-    }
+function isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol){
+    return (checkerboard[endingRow][endingCol] === null);
 }
 
-
-function isJumpToSquareOpen(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-    if (checkerboard[jumpToRow][jumpToCol] === null && isTwoColumns(firstCol, jumpToCol) && isTwoRows(firstRow, jumpToRow, piece)){
-        return true;
-    } else {
-        return false;
-    }
+function isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol){
+    findMiddleRow(firstRow, endingRow);
+    findMiddleCol(firstCol, endingCol);
+    return isNextRow(firstRow, middleRow, piece) && isOpponent(piece, middleRow, middleCol)
 }
-
-function isJumpToSquareOpenKing(firstRow, firstCol, jumpToRow, jumpToCol, piece){
-   if (checkerboard[jumpToRow][jumpToCol] === null && isTwoColumns(firstCol, jumpToCol) && isTwoRowsKing(firstRow, jumpToRow, piece)){
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function isOpponentOnJumpOverSquare(piece, startingRow, startingCol, jumpToRow, jumpToCol){
-    findMiddleCol(startingCol, jumpToCol);
-    if(piece === "R" && isNextRow(startingRow, jumpToRow-1, piece) && isOpponent(piece, jumpToRow-1, middleCol)){
-        return true;
-    } else if (piece === "B" && isNextRow(startingRow, jumpToRow+1, piece) && isOpponent(piece, jumpToRow+1, middleCol)){
-        return true;
-        } else {
-            return false;
-        }
-    }
-
-function isOpponentOnJumpOverSquareKing(piece, firstRow, firstCol, jumpToRow, jumpToCol){
-    findMiddleRow(firstRow, jumpToRow);
-    findMiddleCol(firstCol, jumpToCol);
-if ((piece === "rK" || piece === "bK") && isNextRowKing(firstRow, middleRow, piece)){
-        if (isOpponent(piece, middleRow, middleCol)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
 
 
 function isOpponent(piece, row, col){
-    console.log(row, col);
-    console.log(checkerboard[row][col]);
     if (checkerboard[row][col] === null) {
         return false;
     } else if ((piece === "R" || piece === "rK") && (checkerboard[row][col] === "B" || checkerboard[row][col]===
@@ -358,48 +273,51 @@ function getPieceAt(row, col){
    return checkerboard[row][col];
 }
 
-function isValidMove(firstRow, firstCol, secondRow, secondCol){
-    var piece = checkerboard[firstRow][firstCol];
-    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(secondRow, secondCol))){
+function isValidMove(firstRow, firstCol, endingRow, endingCol){
+    piece = checkerboard[firstRow][firstCol];
+    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(endingRow, endingCol))){
         return false;
-    } else if (isNextRow(firstRow, secondRow, piece) && isAdjacentSpace(firstRow, firstCol, secondRow, secondCol)){
+    } else if (isNextRow(firstRow, endingRow, piece) && isAdjacentSpace(firstRow, firstCol, endingRow, endingCol)){
         return true;
     } else {
         return false;
     }
 }
 
-function isAdjacentSpace(firstRow, firstCol, secondRow, secondCol){
-    return Math.abs(secondCol - firstCol) === 1;
+function isAdjacentSpace(firstRow, firstCol, endingRow, endingCol){
+    return Math.abs(endingCol - firstCol) === 1;
 }
 
-function isTwoColumns(firstCol, secondCol){
-    return Math.abs(secondCol - firstCol) === 2;
+function isTwoColumns(firstCol, endingCol){
+    return Math.abs(endingCol - firstCol) === 2;
 }
 
-function isNextRow(startingRow, endingRow, piece){
-    return piece === "R" && endingRow === startingRow + 1 ||
-        piece === "B" && endingRow === startingRow - 1;
-
+function isNextRow(firstRow, endingRow, piece){
+    if (!isKing(piece)){
+        if (isRed(piece)){
+            return endingRow === firstRow + 1;
+        } else {
+            return endingRow === firstRow - 1;
+        }
+    } else if(isKing(piece)){
+        return Math.abs(endingRow - firstRow) === 1;
+    } else {
+        return false;
+    }
 }
 
-function isNextRowKing(firstRow, secondRow, piece){
-    return (piece === 'rK' || piece === 'bK') && (secondRow === firstRow + 1 || secondRow === firstRow - 1);
-}
 
-function isTwoRows(startingRow, endingRow, piece){
-    return piece === "R" && endingRow === startingRow + 2 ||
-        piece === "B" && endingRow === startingRow - 2;
+function isTwoRows(firstRow, endingRow, piece){
+    if (!isKing(piece)){
+        if(isRed(piece)){
+            return endingRow === firstRow + 2;
+        } else {
+            return endingRow === firstRow - 2;
+        }
+    } else if(isKing(piece)){
+        return Math.abs(endingRow - firstRow) === 2;
+    }
 }
-
-function isTwoRowsKing(firstRow, jumpToRow, piece){
-    return (piece === "rK" || piece === "bK") && Math.abs(jumpToRow - firstRow) === 2;
-}
-
-console.log(checkerboard);
-console.log("----------");
-// console.log(move(0, 0, 0, 1));
-// console.log(checkerboard);
 
 
 $(document).ready(function() {
