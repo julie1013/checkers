@@ -102,18 +102,21 @@ function isOnePlayerGone() {
 
 
 function move(firstRow, firstCol, secondRow, secondCol, piece){
-    if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
-        piece = checkForPromotion(secondRow, piece);
-        setSquare(secondRow, secondCol, piece);
-        setSquare(firstRow, firstCol, null);
-        return true;
-    } else {
-        return false;
+    if (isKing(piece) && isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece)){
+        kingMove(firstRow, firstCol, secondRow, secondCol, piece);
+    } else if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
+            piece = checkForPromotion(secondRow, secondCol, piece);
+            setSquare(secondRow, secondCol, piece);
+            setSquare(firstRow, firstCol, null);
+            return true;
+        } else {
+            return false;
+        }
     }
-}
 
 
-function checkForPromotion(secondRow, piece){
+
+function checkForPromotion(secondRow, secondCol, piece){
     if (secondRow === 7 && isRed(piece)){
         piece = "rK";
    } else if (secondRow === 0 && isBlack(piece)){
@@ -121,15 +124,6 @@ function checkForPromotion(secondRow, piece){
    } return piece;
 }
 
-
-
-function isKingRow(piece){
-    if(isRed(piece)){
-        return 7;
-    } else {
-        return 0;
-    }
-}
 
 function isRed(piece){
     return (piece === "R" || piece === "rK");
@@ -139,37 +133,11 @@ function isBlack(piece){
     return (piece === "B" || piece === "bK");
 }
 
-
-// function move(firstRow, firstCol, secondRow, secondCol, piece){
-//     if (isValidMove(firstRow, firstCol, secondRow, secondCol)){
-//         if (checkerboard[secondRow][secondCol] === null ){
-//             if ((secondRow !==7 && piece === 'R')){
-//                 setSquare(secondRow, secondCol, 'R');
-//                 setSquare(firstRow, firstCol, null);
-//                 $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 60px" class="redChecker"/>');
-//             } else if ((secondRow !==0 && piece === 'B')) {
-//                     setSquare(secondRow, secondCol, 'B');
-//                     setSquare(firstRow, firstCol, null);
-//                     $("#" + secondRow + '_' + secondCol).html('<img src="images/black.jpg" style="width: 65px" class="blackChecker"/>');
-//             } else if (secondRow === 7 && piece === 'R') {
-//                 setSquare(secondRow, secondCol, 'rK');
-//                 setSquare(firstRow, firstCol, null);
-//                 $("#" + secondRow + '_' + secondCol).html('<img src="images/red.jpg" style="width: 60px" class="redKing"/>');
-//             } else if (secondRow === 0 && piece === 'B') {
-//                 setSquare(secondRow, secondCol, 'bK');
-//                 setSquare(firstRow, firstCol, null);
-//                 $("#" + secondRow + '_' + secondCol).html('<img src="images/black.jpg" style="width: 65px" class="blackKing"/>');
-//             }
-//             return true;
-//         } else {
-//             return false;
-//         }
-//         return false;
-//     }
-// }
+function isKing(piece){
+    return (piece ==="rK" || piece === "bK");
+}
 
 function kingMove(firstRow, firstCol, secondRow, secondCol, piece){
-    if(isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece)){
         if (checkerboard[secondRow][secondCol] === null ){
             setSquare(secondRow, secondCol, checkerboard[firstRow][firstCol]);
             setSquare(firstRow, firstCol, null);
@@ -184,8 +152,6 @@ function kingMove(firstRow, firstCol, secondRow, secondCol, piece){
             }
         }
     }
-}
-
 
 function isValidKingMove(firstRow, firstCol, secondRow, secondCol, piece){
     var piece = checkerboard[firstRow][firstCol];
@@ -351,20 +317,37 @@ function isValidSquare(row, col){
 
 function setSquare(row, col, piece) {
     if (isValidSquare(row, col)){
-        if (isRed(piece)){
-            $("#" + row + '_' + col).html('<img src="images/red.jpg" style="width: 60px" class="redChecker"/>');
-        } else if (isBlack(piece)){
-            $("#" + row + '_' + col).html('<img src="images/black.jpg" style="width: 60px" class="blackChecker"/>');
+        setColor(piece);
+        setRank(piece);
+        if (piece !== null){
+        $("#" + row + '_' + col).html('<img src="images/'+color+'.jpg" style="width: 60px" class="'+color+rank+'"/>');
+        checkerboard[row][col] = piece;
         } else {
-            piece = null;
+            checkerboard[row][col] = null;
             $("#" + row + '_' + col).html(null);
         }
-        checkerboard[row][col] = piece;
         return piece;
-    } else {
-        return false;
     }
 }
+
+function setColor(piece){
+    if (isRed(piece)){
+        color = "red";
+    } else if (isBlack(piece)){
+        color = "black";
+    }
+    return color;
+}
+
+function setRank(piece){
+    if (piece === "rK" || piece === "bK"){
+        rank = "King";
+    } else if (piece === "R" || piece === "B"){
+        rank = "Checker";
+    }
+    return rank;
+}
+
 
 function isEven(x){
     return x % 2 === 0;
@@ -444,10 +427,8 @@ $(document).ready(function() {
        }
         var secondPieceRow = $(this).data("row");
         var secondPieceCol = $(this).data("col");
-        if ((piece === "R" || piece === "B") && checkerboard[secondPieceRow][secondPieceCol] === null){
+        if (checkerboard[secondPieceRow][secondPieceCol] === null){
           move(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
-        } else if ((piece === "rK" || piece === "bK") && checkerboard[secondPieceRow][secondPieceCol] === null){
-            kingMove(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
         }
         console.log(pieceRow, pieceCol, secondPieceRow, secondPieceCol, piece);
     });
