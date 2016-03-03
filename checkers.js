@@ -7,14 +7,14 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
-
-var redScoreCount = 0;
-var blackScoreCount = 0;
 var redChecker;
 var blackChecker;
-var piece = 0;
 var middleRow;
 var middleCol;
+var piece = 0;
+var redScoreCount = 0;
+var blackScoreCount = 0;
+
 
 function initializeBoard() {
   for (var row = 0; row < checkerboard.length; row++){
@@ -49,22 +49,22 @@ function drawBoard() {
 }
 
 function scoreCount() {
-    if (redWin(redScoreCount)){
+    if (redWin(countR)){
         $("#redScore").html(redScoreCount);
-    } else if (blackWin(blackScoreCount)){
+    } else if (blackWin(countB)){
         $("#blackScore").html(blackScoreCount);
     }
 }
 
 
-function redWin(){
+function redWin(countR){
     if (isGameOver() && countR !== 0){
         redScoreCount++;
     }
     return redScoreCount;
 }
 
-function blackWin(){
+function blackWin(countB){
     if (isGameOver() && countB !== 0) {
         blackScoreCount++;
     }
@@ -81,18 +81,22 @@ function isGameOver() {
     }
 }
 
-function isOnePlayerGone(countR, countB) {
+function isOnePlayerGone() {
+    var countR = 0;
+    var countB = 0;
     for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
-            if (isRed(piece) > 0 ){
+            if(isRed(checkerboard[row][col])){
                 countR++;
-            } else if (isBlack(piece)){
+            } else if (isBlack(checkerboard[row][col])){
                 countB++;
             }
         }
     }
-    if ((countR === 0 && countB > 0) || (countB === 0 && countR > 0)) {
-        return true;
+    if (countR === 0 && countB > 0){
+        return countB;
+    } else if (countB === 0 && countR > 0) {
+        return countR;
     } else {
         return false;
     }
@@ -100,7 +104,7 @@ function isOnePlayerGone(countR, countB) {
 
 
 function move(firstRow, firstCol, endingRow, endingCol, piece){
-    if (isValidJump(firstRow, firstCol, endingRow, endingCol, piece) || (isValidMove(firstRow, firstCol, endingRow, endingCol))){
+    if (isValidMove(firstRow, firstCol, endingRow, endingCol) || isValidJump(firstRow, firstCol, endingRow, endingCol, piece)){
             piece = checkForPromotion(endingRow, endingCol, piece);
             setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
