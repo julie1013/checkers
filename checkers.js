@@ -49,22 +49,22 @@ function drawBoard() {
 }
 
 function scoreCount() {
-    if (redWin(countR)){
+    if (redWin(redScoreCount)){
         $("#redScore").html(redScoreCount);
-    } else if (blackWin(countB)){
+    } else if (blackWin(blackScoreCount)){
         $("#blackScore").html(blackScoreCount);
     }
 }
 
 
-function redWin(countR){
+function redWin(){
     if (isGameOver() && countR !== 0){
         redScoreCount++;
     }
     return redScoreCount;
 }
 
-function blackWin(countB){
+function blackWin(){
     if (isGameOver() && countB !== 0) {
         blackScoreCount++;
     }
@@ -81,14 +81,12 @@ function isGameOver() {
     }
 }
 
-function isOnePlayerGone() {
-    var countR = 0;
-    var countB = 0;
+function isOnePlayerGone(countR, countB) {
     for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
-            if (checkerboard[row][col] === 'R'){
+            if (isRed(piece) > 0 ){
                 countR++;
-            } else if (checkerboard[row][col] === 'B'){
+            } else if (isBlack(piece)){
                 countB++;
             }
         }
@@ -102,13 +100,21 @@ function isOnePlayerGone() {
 
 
 function move(firstRow, firstCol, endingRow, endingCol, piece){
-    if (isKing(piece) && isValidKingMove(firstRow, firstCol, endingRow, endingCol, piece)){
-        kingMove(firstRow, firstCol, endingRow, endingCol, piece);
-    } else if (isValidMove(firstRow, firstCol, endingRow, endingCol)){
+    if (isValidJump(firstRow, firstCol, endingRow, endingCol, piece) || (isValidMove(firstRow, firstCol, endingRow, endingCol))){
             piece = checkForPromotion(endingRow, endingCol, piece);
             setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
-            return true;
+        if (Math.abs(endingRow - firstRow) === 2){
+            setSquare(middleRow, middleCol, null);
+        }
+        if (isGameOver()){
+            if (redWin()){
+                redScoreCount++;
+            } else if (blackWin()){
+                blackScoreCount++;
+            }
+        }
+        return true;
         } else {
             return false;
         }
@@ -136,42 +142,6 @@ function isBlack(piece){
 function isKing(piece){
     return (piece ==="rK" || piece === "bK");
 }
-
-function kingMove(firstRow, firstCol, endingRow, endingCol, piece){
-    if (isKing(piece)){
-        if (checkerboard[endingRow][endingCol] === null ){
-            setSquare(endingRow, endingCol, checkerboard[firstRow][firstCol]);
-            setSquare(firstRow, firstCol, null);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-function isValidKingMove(firstRow, firstCol, endingRow, endingCol, piece){
-    piece = checkerboard[firstRow][firstCol];
-    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(endingRow, endingCol))){
-        return false;
-    } else if (isValidSquare(firstRow, firstCol) && isAdjacentSpace(firstRow, firstCol, endingRow, endingCol)){
-            return true;
-    } else {
-        return false;
-    }
-}
-
-
-function jump(firstRow, firstCol, endingRow, endingCol, piece){
-    if (isValidJump(firstRow, firstCol, endingRow, endingCol, piece)){
-        setSquare(endingRow, endingCol, checkerboard[firstRow][firstCol]);
-        setSquare(firstRow, firstCol, null);
-        setSquare(middleRow, middleCol, null);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
 function findMiddleRow(firstRow, endingRow){
     if (firstRow + 1 === endingRow - 1) {
