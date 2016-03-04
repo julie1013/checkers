@@ -83,8 +83,10 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
         if (Math.abs(endingRow - firstRow) === 2){
              if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
                 countR--;
+                $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
             } else if (checkerboard[middleRow][middleCol] === "B" || checkerboard[middleRow][middleCol] === "bK"){
                 countB--;
+                $("#end_turn").removeClass("hidden");
             }
             setSquare(middleRow, middleCol, null);
         } if (countR === 0){
