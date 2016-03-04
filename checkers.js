@@ -7,6 +7,8 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
+
+var player = "rPlayer";
 var redChecker;
 var blackChecker;
 var middleRow;
@@ -46,6 +48,36 @@ function drawBoard() {
             }
             $("#checkerboard").append("<div class = " + squareColor + " data-col='" + col + "' data-row='" + row + "' class='square' id=" + row + '_' + col + "></div>")
 
+        }
+    }
+}
+
+function switchPlayer(){
+                if (player === "rPlayer"){
+                    player = "bPlayer";
+                    return "bPlayer"
+                } else if (player === "bPlayer"){
+                    player = "rPlayer";
+                    return "rPlayer";
+                }
+            }
+
+function disableCheckers(){
+        if (player === "rPlayer"){
+            if ($("#checkerboard div").siblings().hasClass("blackChecker") || $("#checkerboard div").siblings().hasClass("blackKing")){
+                $(this).prop("disabled", true);
+                if ($("#checkerboard div").siblings().hasClass("redChecker") || $("#checkerboard div").siblings().hasClass("redKing")){
+                $(this).prop("disabled", false);
+
+            } else if (player === "bPlayer"){
+                if ($("#checkerboard div").siblings().hasClass("redChecker") || $("#checkerboard div").siblings().hasClass("redKing")){
+                    $(this).prop("disabled", true);
+                    if ($("#checkerboard div").siblings().hasClass("blackChecker") || $("#checkerboard div").siblings().hasClass("blackKing")){
+                    $(this).prop("disabled", false);
+                    return "rPlayer";
+                    }
+                }
+            }
         }
     }
 }
@@ -99,6 +131,7 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
         }
 
     }
+    switchPlayer();
     return true;
 }
 
@@ -145,6 +178,19 @@ function findMiddleCol(firstCol, endingCol){
     }
     return middleCol;
 }
+
+function anotherJumpPossible(row, col, piece){
+    if (checkerboard[Math.abs(Math.abs(row - 2) - row) === 2][Math.abs(Math.abs(col - 2) - col) === 2] === null){
+        if (isOpponent(piece, Math.abs(Math.abs(row - 1) - row) === 1, Math.abs(Math.abs(col - 1) - col === 1))){
+            if (isValidJump(row, col, Math.abs(Math.abs(row - 2) - row) === 2, Math.abs(Math.abs(col - 2) - col) === 2,piece)){
+                return true;
+            }
+        }
+    }
+}
+    //is two rows ahead/behind null?
+    //is opponent on jump over square?
+    //is it a legal move for the piece?
 
 
 function isValidJump(firstRow, firstCol, endingRow, endingCol, piece){
@@ -275,6 +321,7 @@ $(document).ready(function() {
     drawBoard();
     initializeBoard();
     $("#checkerboard div").on("click", function(event){
+        disableCheckers();
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
         if ($(this).find(".blackKing").length !==0){
