@@ -11,6 +11,8 @@ var redChecker;
 var blackChecker;
 var middleRow;
 var middleCol;
+var countR = 12;
+var countB = 12;
 var piece = 0;
 var redScoreCount = 0;
 var blackScoreCount = 0;
@@ -57,49 +59,19 @@ function scoreCount() {
 }
 
 
-function redWin(countR){
-    if (isGameOver() && countR !== 0){
-        redScoreCount++;
-    }
+function redWin(){
+    redScoreCount++;
     return redScoreCount;
 }
 
-function blackWin(countB){
-    if (isGameOver() && countB !== 0) {
-        blackScoreCount++;
-    }
+function blackWin(){
+    blackScoreCount++;
     return blackScoreCount;
 }
 
 
 function isGameOver() {
-    if (isOnePlayerGone()){
-        console.log("Game over");
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function isOnePlayerGone() {
-    var countR = 0;
-    var countB = 0;
-    for (var row = 0; row < checkerboard.length; row++){
-        for (var col = 0; col < checkerboard[row].length; col++){
-            if(isRed(checkerboard[row][col])){
-                countR++;
-            } else if (isBlack(checkerboard[row][col])){
-                countB++;
-            }
-        }
-    }
-    if (countR === 0 && countB > 0){
-        return countB;
-    } else if (countB === 0 && countR > 0) {
-        return countR;
-    } else {
-        return false;
-    }
+   return (redWin() || blackWin());
 }
 
 
@@ -109,21 +81,24 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
         if (Math.abs(endingRow - firstRow) === 2){
-            setSquare(middleRow, middleCol, null);
-        }
-        if (isGameOver()){
-            if (redWin()){
-                redScoreCount++;
-            } else if (blackWin()){
-                blackScoreCount++;
+             if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
+                countR--;
+            } else if (checkerboard[middleRow][middleCol] === "B" || checkerboard[middleRow][middleCol] === "bK"){
+                countB--;
             }
-        }
-        return true;
-        } else {
-            return false;
-        }
-    }
+            setSquare(middleRow, middleCol, null);
+        } if (countR === 0){
+            blackWin();
+            $("#blackScore > .score").html(blackScoreCount);
 
+        } else if (countB === 0){
+            redWin();
+            $("#redScore > .score").html(redScoreCount);
+        }
+
+    }
+    return true;
+}
 
 
 function checkForPromotion(endingRow, endingCol, piece){
@@ -302,15 +277,21 @@ $(document).ready(function() {
         var pieceCol = $(".selected").data("col");
         if ($(this).find(".blackKing").length !==0){
             piece = "bK";
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
        } else if ($(this).find(".redKing").length !==0){
             piece = "rK";
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
        } else if ($(this).find(".redChecker").length !==0){
             piece = "R";
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
        } else if ($(this).find(".blackChecker").length !==0){
             piece = "B";
+            $(this).addClass("selected");
+            $(this).siblings().removeClass("selected");
        }
-        $(this).addClass("selected");
-        $(this).siblings().removeClass("selected");
         var endingPieceRow = $(this).data("row");
         var endingPieceCol = $(this).data("col");
         if (checkerboard[endingPieceRow][endingPieceCol] === null){
