@@ -62,22 +62,38 @@ function switchPlayer(){
     }
 }
 
-function disableCheckers(){
-    for (var row = 0; row < checkerboard.length; row++){
-        for (var col = 0; col < checkerboard[row].length; col++){
-            if (player = "rPlayer"){
-                if (isRed(piece)){
-                    $(checkerboard[row][col]).prop("disabled", false);
-                }
-                if (isBlack(piece)){
-                    $(checkerboard[row][col]).prop("disabled", true);
 
-                }
-            } else if (player = "bPlayer"){
-                if (isRed(piece)){
-                    $(checkerboard[row][col]).prop("disabled", true);
-                } if (isBlack(piece)){
-                    $(checkerboard[row][col]).prop("disabled", false);
+function resetCounter(){
+    countR = 12;
+    countB = 12;
+}
+
+function disableCheckers(){
+        for (var row = 0; row < checkerboard.length; row++){
+            for (var col = 0; col < checkerboard[row].length; col++){
+                if (player === "rPlayer"){
+                    if ($("#" + row + '_' + col).children().hasClass("blackChecker")){
+                        $("#" + row + '_' + col).children().prop("disabled", true);
+                        if ($("#" + row + '_' + col).children().hasClass("blackKing")){
+                            $("#" + row + '_' + col).children().prop("disabled", true);
+                        }
+                    } else if ($("#" + row + '_' + col).children().hasClass("redChecker")){
+                        $("#" + row + '_' + col).children().prop("disable", false);
+                        if ($("#" + row + '_' + col).children().hasClass("redKing")){
+                            $("#" + row + '_' + col).children().prop("disable", false);
+                        }
+                    }
+                } else if (player === "bPlayer"){
+                       if ($("#" + row + '_' + col).children().hasClass("redChecker")){
+                        $("#" + row + '_' + col).children().prop("disabled", true);
+                        if ($("#" + row + '_' + col).children().hasClass("redKing")){
+                            $("#" + row + '_' + col).children().prop("disabled", true);
+                        } else if ($("#" + row + '_' + col).children().hasClass("blackChecker")){
+                        $("#" + row + '_' + col).children().prop("disable", false);
+                        if ($("#" + row + '_' + col).children().hasClass("blackKing")){
+                            $("#" + row + '_' + col).children().prop("disable", false);
+                        }
+                    }
                 }
             }
         }
@@ -126,10 +142,18 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
         } if (countR === 0){
             blackWin();
             $("#blackScore > .score").html(blackScoreCount);
+            setTimeout(function(){
+                initializeBoard();
+                resetCounter();
+            }, 2000);
 
         } else if (countB === 0){
             redWin();
             $("#redScore > .score").html(redScoreCount);
+            setTimeout(function(){
+                initializeBoard();
+                resetCounter();
+            }, 2000);
         }
 
     }
