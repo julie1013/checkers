@@ -53,29 +53,31 @@ function drawBoard() {
 }
 
 function switchPlayer(){
-                if (player === "rPlayer"){
-                    player = "bPlayer";
-                    return "bPlayer"
-                } else if (player === "bPlayer"){
-                    player = "rPlayer";
-                    return "rPlayer";
-                }
-            }
+    if (player === "rPlayer"){
+        player = "bPlayer";
+        return "bPlayer"
+    } else if (player === "bPlayer"){
+        player = "rPlayer";
+        return "rPlayer";
+    }
+}
 
 function disableCheckers(){
-        if (player === "rPlayer"){
-            if ($("#checkerboard div").siblings().hasClass("blackChecker") || $("#checkerboard div").siblings().hasClass("blackKing")){
-                $(this).prop("disabled", true);
-                if ($("#checkerboard div").siblings().hasClass("redChecker") || $("#checkerboard div").siblings().hasClass("redKing")){
-                $(this).prop("disabled", false);
+    for (var row = 0; row < checkerboard.length; row++){
+        for (var col = 0; col < checkerboard[row].length; col++){
+            if (player = "rPlayer"){
+                if (isRed(piece)){
+                    $(checkerboard[row][col]).prop("disabled", false);
+                }
+                if (isBlack(piece)){
+                    $(checkerboard[row][col]).prop("disabled", true);
 
-            } else if (player === "bPlayer"){
-                if ($("#checkerboard div").siblings().hasClass("redChecker") || $("#checkerboard div").siblings().hasClass("redKing")){
-                    $(this).prop("disabled", true);
-                    if ($("#checkerboard div").siblings().hasClass("blackChecker") || $("#checkerboard div").siblings().hasClass("blackKing")){
-                    $(this).prop("disabled", false);
-                    return "rPlayer";
-                    }
+                }
+            } else if (player = "bPlayer"){
+                if (isRed(piece)){
+                    $(checkerboard[row][col]).prop("disabled", true);
+                } if (isBlack(piece)){
+                    $(checkerboard[row][col]).prop("disabled", false);
                 }
             }
         }
