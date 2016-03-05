@@ -130,6 +130,8 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             piece = checkForPromotion(endingRow, endingCol, piece);
             setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
+            switchPlayer();
+            disableCheckers();
         if (Math.abs(endingRow - firstRow) === 2){
              if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
                 countR--;
@@ -346,8 +348,8 @@ function isTwoRows(firstRow, endingRow, piece){
 $(document).ready(function() {
     drawBoard();
     initializeBoard();
+    disableCheckers();
     $("#checkerboard div").on("click", function(event){
-        disableCheckers();
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
         if ($(this).find(".blackKing").length !==0){

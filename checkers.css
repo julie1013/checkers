@@ -54,17 +54,15 @@ header {
 
 body {
   color: #000;
-  font-size: 12px;
   line-height: 1.4;
   font-family: 'Rock Salt', cursive;
 }
 
-h1 {
-  font-size: 30px;
+h1, h2 {
+  font-size: 25px;
 }
 
 h2 {
-  font-size: 25px;
   text-decoration: underline;
 }
 
@@ -72,9 +70,9 @@ h2 {
   border: 3px solid black;
   border-radius: 20px;
   text-align: center;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
-  padding-top: 5px;
+  padding-top: 3px;
   float: left;
   clear: both;
   width: 10%;
