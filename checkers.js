@@ -100,7 +100,11 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
                 $("#end_turn").removeClass("hidden");
             }
             setSquare(middleRow, middleCol, null);
-        } if (countR === 0){
+        } else {
+            switchTurn();
+        }
+
+        if (countR === 0){
             blackWin();
             $("#blackScore > .score").html(blackScoreCount);
             resetGame();
@@ -109,7 +113,6 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             $("#redScore > .score").html(redScoreCount);
              resetGame();
         }
-        switchTurn();
 
     }
     return true;
