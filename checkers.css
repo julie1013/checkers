@@ -79,9 +79,7 @@ h2 {
   float: left;
   clear: both;
   width: 10%;
-  margin-left: 400px;
-  margin-right: -540px;
-  background: red;
+  text-shadow: none;
 }
 
 .hidden {

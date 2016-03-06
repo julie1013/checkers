@@ -97,9 +97,11 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
                 $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
             } else if (checkerboard[middleRow][middleCol] === "B" || checkerboard[middleRow][middleCol] === "bK"){
                 countB--;
-                $("#end_turn").removeClass("hidden");
+                $("#end_turn").removeClass("hidden").css("background", "red").css("color", "black").css("margin-left", "400px").css("margin-right", "-540px");
             }
             setSquare(middleRow, middleCol, null);
+
+
         } else {
             switchTurn();
         }
@@ -342,7 +344,7 @@ $(document).ready(function() {
     });
      $("#end_turn").on("click", function(){
         ($(this).addClass("hidden"))
-       // switchTurn();
+        switchTurn();
     });
 });
 
