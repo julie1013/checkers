@@ -53,9 +53,12 @@ header {
 }
 
 body {
-  color: #000;
+  color: white;
   line-height: 1.4;
   font-family: 'Rock Salt', cursive;
+  font-weight: bold;
+  text-shadow: 2px 2px black;
+  background: url(images/page_background.jpg);
 }
 
 h1, h2 {
@@ -89,7 +92,8 @@ h2 {
   height: 645px;
   width: 645px;
   margin: 0 auto;
-  border: 1px solid black;
+  padding: 2.5px 0 0 2px;
+  background: white;
 }
 
 #container div {
@@ -100,12 +104,12 @@ h2 {
 }
 
 #container div.black {
-  background: black;
+  background: url(images/blackSquare.jpg);
   color: white;
 }
 
 #container div.red {
-  background: #ff0000;
+  background: url(images/redSquare.jpg);
   color: white;
 }
 

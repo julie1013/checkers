@@ -42,12 +42,11 @@ function drawBoard() {
         for (var col = 0; col < checkerboard[row].length; col++){
             var squareColor;
             if (isValidSquare(row, col)){
-                squareColor = 'black';
+                squareColor = "black";
             } else {
-                squareColor = 'red';
+                squareColor = "red";
             }
-            $("#checkerboard").append("<div class = " + squareColor + " data-col='" + col + "' data-row='" + row + "' class='square' id=" + row + '_' + col + "></div>")
-
+            $("#checkerboard").append("<div class = " + squareColor + " data-col='" + col + "' data-row='" + row + "' class='square' id=" + row + '_' + col + "></div>");
         }
     }
 }
@@ -216,7 +215,7 @@ function setSquare(row, col, piece) {
         setColor(piece);
         setRank(piece);
         if (piece !== null){
-        $("#" + row + '_' + col).html('<img src="images/'+color+'.jpg" style="width: 60px" class="'+color+rank+'"/>');
+        $("#" + row + '_' + col).html('<img src="images/'+color+rank+'.jpg" style="width: 60px" class="'+color+rank+'"/>').children().css("margin", "5px");
         checkerboard[row][col] = piece;
         } else {
             checkerboard[row][col] = null;
