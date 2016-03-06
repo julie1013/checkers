@@ -345,6 +345,14 @@ $(document).ready(function() {
           move(pieceRow, pieceCol, endingPieceRow, endingPieceCol, piece);
         }
     });
+     $("#end_turn").on("click", function(){
+        ($(this).addClass("hidden"))
+        if ($(this).attr("background", "black")){
+            // whoseTurn--;
+        } else {
+            // whoseTurn++;
+        }
+    });
 });
 
 
