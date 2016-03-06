@@ -8,6 +8,8 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
 
+
+
 var redChecker;
 var blackChecker;
 var middleRow;
@@ -20,7 +22,7 @@ var blackScoreCount = 0;
 var option = 0;
 
 
-function initializeBoard() {
+function initializeBoard(){
   for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
             if (row < 3){
@@ -36,8 +38,23 @@ function initializeBoard() {
 }
 
 
+function initializeTest(){
+  for (var row = 0; row < checkerboard.length; row++){
+        for (var col = 0; col < checkerboard[row].length; col++){
+            if (row === 2 && col === 2){
+                setSquare(row, col, "B");
+            } else if (row === 1 && col === 1){
+                setSquare(row, col, "R");
+            } else {
+                setSquare(row, col, null);
 
-function drawBoard() {
+            }
+        }
+    }
+}
+
+
+function drawBoard(){
     for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
             var squareColor;
@@ -71,10 +88,12 @@ function scoreCount() {
 
 function redWin(){
     redScoreCount++;
+    $("#red_wins").replaceWith(" wins!");
     return redScoreCount;
 }
 
 function blackWin(){
+    $("#black_wins").replaceWith(" wins!");
     blackScoreCount++;
     return blackScoreCount;
 }
@@ -130,6 +149,10 @@ function checkForPromotion(endingRow, endingCol, piece){
 }
 
 
+function isPieceTurn(){
+    return ((isRed(piece) && option === 1) || (isBlack(piece) && option === 0));
+}
+
 function isRed(piece){
     return (piece === "R" || piece === "rK");
 }
@@ -163,18 +186,6 @@ function findMiddleCol(firstCol, endingCol){
     }
     return middleCol;
 }
-
-function anotherJumpPossible(row, col, piece){
-    if (checkerboard[Math.abs(Math.abs(row - 2) - row) === 2][Math.abs(Math.abs(col - 2) - col) === 2] === null){
-        if (isOpponent(piece, Math.abs(Math.abs(row - 1) - row) === 1, Math.abs(Math.abs(col - 1) - col === 1))){
-            if (isValidJump(row, col, Math.abs(Math.abs(row - 2) - row) === 2, Math.abs(Math.abs(col - 2) - col) === 2,piece)){
-                return true;
-            }
-        }
-    }
-}
-//set maximum margins for jumping
-
 
 function isValidJump(firstRow, firstCol, endingRow, endingCol, piece){
     return (isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && isValidSquare(endingRow, endingCol) && isTwoRows(firstRow, endingRow, piece));
@@ -303,6 +314,7 @@ function isTwoRows(firstRow, endingRow, piece){
 $(document).ready(function() {
     drawBoard();
     initializeBoard();
+    // initializeTest();
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
@@ -329,8 +341,10 @@ $(document).ready(function() {
        }
         var endingPieceRow = $(this).data("row");
         var endingPieceCol = $(this).data("col");
-        if (checkerboard[endingPieceRow][endingPieceCol] === null){
+        if (checkerboard[endingPieceRow][endingPieceCol] === null && isPieceTurn()){
           move(pieceRow, pieceCol, endingPieceRow, endingPieceCol, piece);
         }
     });
 });
+
+
