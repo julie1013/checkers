@@ -51,6 +51,7 @@ function initializeTest(){
             }
         }
     }
+    whoseTurn = 1;
 }
 
 
