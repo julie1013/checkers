@@ -20,6 +20,8 @@ var piece = 0;
 var redScoreCount = 0;
 var blackScoreCount = 0;
 var whoseTurn = 0;
+var jumped = false;
+var activePieceCoords = { row: -1, col: -1 };
 
 
 function initializeBoard(){
@@ -104,14 +106,25 @@ function isGameOver() {
    return (redWin() || blackWin());
 }
 
+function relocatePiece(firstRow, firstCol, endingRow, endingCol, piece) {
+  piece = checkForPromotion(endingRow, endingCol, piece);
+  setSquare(endingRow, endingCol, piece);
+  setSquare(firstRow, firstCol, null);
+  activePieceCoords = { row: firstRow, col: firstCol };
+
+  return piece;
+}
+
+function setActivePieceCoords(row, col) {
+  activePieceCoords['row'] = row;
+  activePieceCoords['col'] = col;
+}
 
 function move(firstRow, firstCol, endingRow, endingCol, piece){
     if (isValidMove(firstRow, firstCol, endingRow, endingCol) || isValidJump(firstRow, firstCol, endingRow, endingCol, piece)){
-            piece = checkForPromotion(endingRow, endingCol, piece);
-            setSquare(endingRow, endingCol, piece);
-            setSquare(firstRow, firstCol, null);
         if (isJump(endingRow, firstRow)){
-             if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
+          piece = relocatePiece(firstRow, firstCol, endingRow, endingCol, piece);
+            if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
                 countR--;
                 $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
             } else if (checkerboard[middleRow][middleCol] === "B" || checkerboard[middleRow][middleCol] === "bK"){
@@ -119,7 +132,11 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
                 $("#end_turn").removeClass("hidden");
             }
             setSquare(middleRow, middleCol, null);
-        } else {
+            jumped = true;
+            setActivePieceCoords(endingRow, endingCol);
+        } else if (!jumped) {
+            relocatePiece(firstRow, firstCol, endingRow, endingCol, piece);
+            setActivePieceCoords(-1, -1);
             switchTurn();
         }
 
@@ -327,35 +344,45 @@ function switchTurn() {
   } else {
     whoseTurn = 1;
   }
+  jumped = false;
+}
+
+function selectPiece(elt, piece) {
+  $(elt).addClass("selected");
+  $(elt).siblings().removeClass("selected");
+
+  return piece
+}
+
+function isActivePiece(pieceRow, pieceCol) {
+  if (jumped) {
+    return pieceRow === activePieceCoords['row'] && pieceCol === activePieceCoords['col'];
+  } else {
+    return true;
+  }
 }
 
 $(document).ready(function() {
     drawBoard();
-    // initializeBoard();
-    initializeTest();
+    initializeBoard();
+    // initializeTest();
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
+
         if ($(this).find(".blackKing").length !==0 && whoseTurn == 1){
-            piece = "bK";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
-            piece = "rK";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
-            piece = "R";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
-            piece = "B";
-            $(this).addClass("selected");
-            $(this).siblings().removeClass("selected");
-       }
+            piece = selectPiece(this, "bK");
+        } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
+            piece = selectPiece(this, "rK");
+        } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
+            piece = selectPiece(this, "R")
+        } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
+            piece = selectPiece(this, "B")
+        }
+
         var endingPieceRow = $(this).data("row");
         var endingPieceCol = $(this).data("col");
-        if (checkerboard[endingPieceRow][endingPieceCol] === null && isPieceTurn()){
+        if (checkerboard[endingPieceRow][endingPieceCol] === null && isPieceTurn() && isActivePiece(pieceRow, pieceCol)){
           move(pieceRow, pieceCol, endingPieceRow, endingPieceCol, piece);
         }
     });
