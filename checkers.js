@@ -103,25 +103,24 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
         } if (countR === 0){
             blackWin();
             $("#blackScore > .score").html(blackScoreCount);
-            setTimeout(function(){
-                initializeBoard();
-                resetCounter();
-                whoseTurn = 0;
-            }, 2000);
-
+            resetGame();
         } else if (countB === 0){
             redWin();
             $("#redScore > .score").html(redScoreCount);
-            setTimeout(function(){
-                initializeBoard();
-                resetCounter();
-                whoseTurn = 0;
-            }, 2000);
+             resetGame();
         }
         switchTurn();
 
     }
     return true;
+}
+
+function resetGame(){
+    setTimeout(function(){
+        initializeBoard();
+        resetCounter();
+        whoseTurn = 0;
+    }, 2000);
 }
 
 
@@ -315,19 +314,19 @@ $(document).ready(function() {
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
-        if ($(this).find(".blackKing").length !==0 && whoseTurn == 1){
+        if ($(this).find(".blackKing").length !==0 && whoseTurn === 1){
             piece = "bK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
+       } else if ($(this).find(".redKing").length !==0 && whoseTurn === 0){
             piece = "rK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
+       } else if ($(this).find(".redChecker").length !==0 && whoseTurn === 0){
             piece = "R";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
+       } else if ($(this).find(".blackChecker").length !==0 && whoseTurn === 1){
             piece = "B";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
