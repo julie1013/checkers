@@ -37,24 +37,6 @@ function initializeBoard(){
     }
 }
 
-
-function initializeTest(){
-  for (var row = 0; row < checkerboard.length; row++){
-        for (var col = 0; col < checkerboard[row].length; col++){
-            if (row === 2 && col === 2){
-                setSquare(row, col, "B");
-            } else if (row === 1 && col === 1){
-                setSquare(row, col, "R");
-            } else {
-                setSquare(row, col, null);
-
-            }
-        }
-    }
-    whoseTurn = 1;
-}
-
-
 function drawBoard(){
     for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
@@ -68,7 +50,6 @@ function drawBoard(){
         }
     }
 }
-
 
 
 function resetCounter(){
@@ -125,6 +106,7 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             setTimeout(function(){
                 initializeBoard();
                 resetCounter();
+                whoseTurn = 0;
             }, 2000);
 
         } else if (countB === 0){
@@ -133,6 +115,7 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             setTimeout(function(){
                 initializeBoard();
                 resetCounter();
+                whoseTurn = 0;
             }, 2000);
         }
         switchTurn();
@@ -328,8 +311,7 @@ function switchTurn() {
 
 $(document).ready(function() {
     drawBoard();
-    // initializeBoard();
-    initializeTest();
+    initializeBoard();
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
@@ -358,11 +340,7 @@ $(document).ready(function() {
     });
      $("#end_turn").on("click", function(){
         ($(this).addClass("hidden"))
-        if ($(this).attr("background", "black")){
-            // whoseTurn--;
-        } else {
-            // whoseTurn++;
-        }
+       // switchTurn();
     });
 });
 
