@@ -91,14 +91,15 @@ function relocatePiece(firstRow, firstCol, endingRow, endingCol, piece) {
   piece = checkForPromotion(endingRow, endingCol, piece);
   setSquare(endingRow, endingCol, piece);
   setSquare(firstRow, firstCol, null);
-  activePieceCoords = { row: firstRow, col: firstCol };
+  activePieceCoords = { row: firstRow,
+                        col: firstCol };
 
   return piece;
 }
 
 function setActivePieceCoords(row, col) {
-  activePieceCoords['row'] = row;
-  activePieceCoords['col'] = col;
+  activePieceCoords["row"] = row;
+  activePieceCoords["col"] = col;
 }
 
 function move(firstRow, firstCol, endingRow, endingCol, piece){
@@ -110,7 +111,7 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
                 $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
             } else if (checkerboard[middleRow][middleCol] === "B" || checkerboard[middleRow][middleCol] === "bK"){
                 countB--;
-                $("#end_turn").removeClass("hidden").css("background", "red").css("color", "black").css("margin-left", "400px").css("margin-right", "-540px");
+                $("#end_turn").removeClass("hidden").css("background", "red").css("color", "black").css("margin-left", "400px").css("margin-right", "-540px").css("float", "left");
             }
             setSquare(middleRow, middleCol, null);
             jumped = true;
