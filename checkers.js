@@ -39,24 +39,6 @@ function initializeBoard(){
     }
 }
 
-
-function initializeTest(){
-  for (var row = 0; row < checkerboard.length; row++){
-        for (var col = 0; col < checkerboard[row].length; col++){
-            if (row === 2 && col === 2){
-                setSquare(row, col, "B");
-            } else if (row === 1 && col === 1){
-                setSquare(row, col, "R");
-            } else {
-                setSquare(row, col, null);
-
-            }
-        }
-    }
-    whoseTurn = 1;
-}
-
-
 function drawBoard(){
     for (var row = 0; row < checkerboard.length; row++){
         for (var col = 0; col < checkerboard[row].length; col++){
@@ -70,7 +52,6 @@ function drawBoard(){
         }
     }
 }
-
 
 
 function resetCounter(){
@@ -129,7 +110,7 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
                 $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
             } else if (checkerboard[middleRow][middleCol] === "B" || checkerboard[middleRow][middleCol] === "bK"){
                 countB--;
-                $("#end_turn").removeClass("hidden");
+                $("#end_turn").removeClass("hidden").css("background", "red").css("color", "black").css("margin-left", "400px").css("margin-right", "-540px");
             }
             setSquare(middleRow, middleCol, null);
             jumped = true;
@@ -143,22 +124,23 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
         if (countR === 0){
             blackWin();
             $("#blackScore > .score").html(blackScoreCount);
-            setTimeout(function(){
-                initializeBoard();
-                resetCounter();
-            }, 2000);
-
+            resetGame();
         } else if (countB === 0){
             redWin();
             $("#redScore > .score").html(redScoreCount);
-            setTimeout(function(){
-                initializeBoard();
-                resetCounter();
-            }, 2000);
+             resetGame();
         }
 
     }
     return true;
+}
+
+function resetGame(){
+    setTimeout(function(){
+        initializeBoard();
+        resetCounter();
+        whoseTurn = 0;
+    }, 2000);
 }
 
 
@@ -365,7 +347,6 @@ function isActivePiece(pieceRow, pieceCol) {
 $(document).ready(function() {
     drawBoard();
     initializeBoard();
-    // initializeTest();
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
@@ -388,11 +369,7 @@ $(document).ready(function() {
     });
      $("#end_turn").on("click", function(){
         ($(this).addClass("hidden"))
-        if ($(this).attr("background", "black")){
-            // whoseTurn--;
-        } else {
-            // whoseTurn++;
-        }
+        switchTurn();
     });
 });
 
