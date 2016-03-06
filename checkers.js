@@ -19,7 +19,7 @@ var countB = 12;
 var piece = 0;
 var redScoreCount = 0;
 var blackScoreCount = 0;
-var option = 0;
+var whoseTurn = 0;
 
 
 function initializeBoard(){
@@ -150,7 +150,7 @@ function checkForPromotion(endingRow, endingCol, piece){
 
 
 function isPieceTurn(){
-    return ((isRed(piece) && option === 1) || (isBlack(piece) && option === 0));
+    return ((isRed(piece) && whoseTurn === 1) || (isBlack(piece) && whoseTurn === 0));
 }
 
 function isRed(piece){
@@ -318,26 +318,26 @@ $(document).ready(function() {
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
-        if ($(this).find(".blackKing").length !==0 && option == 1){
+        if ($(this).find(".blackKing").length !==0 && whoseTurn == 1){
             piece = "bK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            option--;
-       } else if ($(this).find(".redKing").length !==0 && option == 0){
+            whoseTurn--;
+       } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
             piece = "rK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            option++;
-       } else if ($(this).find(".redChecker").length !==0 && option == 0){
+            whoseTurn++;
+       } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
             piece = "R";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            option++;
-       } else if ($(this).find(".blackChecker").length !==0 && option == 1){
+            whoseTurn++;
+       } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
             piece = "B";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            option--;
+            whoseTurn--;
        }
         var endingPieceRow = $(this).data("row");
         var endingPieceCol = $(this).data("col");
