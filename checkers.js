@@ -110,7 +110,7 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             piece = checkForPromotion(endingRow, endingCol, piece);
             setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
-        if (Math.abs(endingRow - firstRow) === 2){
+        if (isJump()){
              if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
                 countR--;
                 $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
@@ -140,6 +140,10 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
     return true;
 }
 
+
+function isJump(){
+    return (Math.abs(endingRow - firstRow) === 2);
+}
 
 function checkForPromotion(endingRow, endingCol, piece){
     if (endingRow === 7 && isRed(piece)){
