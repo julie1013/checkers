@@ -223,8 +223,8 @@ function isValidSquare(row, col){
 
 function setSquare(row, col, piece) {
     if (isValidSquare(row, col)){
-        setColor(piece);
-        setRank(piece);
+        var color = setColor(piece);
+        var rank = setRank(piece);
         if (piece !== null){
         $("#" + row + '_' + col).html('<img src="images/'+color+rank+'.jpg" style="width: 60px" class="'+color+rank+'"/>').children().css("margin", "5px");
         checkerboard[row][col] = piece;
@@ -238,20 +238,22 @@ function setSquare(row, col, piece) {
 
 function setColor(piece){
     if (isRed(piece)){
-        color = "red";
+        return "red";
     } else if (isBlack(piece)){
-        color = "black";
+        return "black";
+    } else {
+        return null;
     }
-    return color;
 }
 
 function setRank(piece){
     if (piece === "rK" || piece === "bK"){
-        rank = "King";
+        return "King";
     } else if (piece === "R" || piece === "B"){
-        rank = "Checker";
+        return "Checker";
+    } else {
+        return null;
     }
-    return rank;
 }
 
 
@@ -313,8 +315,8 @@ function isTwoRows(firstRow, endingRow, piece){
 
 $(document).ready(function() {
     drawBoard();
-    initializeBoard();
-    // initializeTest();
+    // initializeBoard();
+    initializeTest();
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
