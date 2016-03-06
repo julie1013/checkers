@@ -110,7 +110,7 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             piece = checkForPromotion(endingRow, endingCol, piece);
             setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
-        if (isJump()){
+        if (isJump(endingRow, firstRow)){
              if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
                 countR--;
                 $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
@@ -135,13 +135,14 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
                 resetCounter();
             }, 2000);
         }
+        switchTurn();
 
     }
     return true;
 }
 
 
-function isJump(){
+function isJump(endingRow, firstRow){
     return (Math.abs(endingRow - firstRow) === 2);
 }
 
@@ -155,7 +156,7 @@ function checkForPromotion(endingRow, endingCol, piece){
 
 
 function isPieceTurn(){
-    return ((isRed(piece) && whoseTurn === 1) || (isBlack(piece) && whoseTurn === 0));
+    return ((isRed(piece) && whoseTurn === 0) || (isBlack(piece) && whoseTurn === 1));
 }
 
 function isRed(piece){
@@ -317,6 +318,13 @@ function isTwoRows(firstRow, endingRow, piece){
     }
 }
 
+function switchTurn() {
+  if (whoseTurn === 1) {
+    whoseTurn = 0;
+  } else {
+    whoseTurn = 1;
+  }
+}
 
 $(document).ready(function() {
     drawBoard();
@@ -329,22 +337,18 @@ $(document).ready(function() {
             piece = "bK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            whoseTurn--;
        } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
             piece = "rK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            whoseTurn++;
        } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
             piece = "R";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            whoseTurn++;
        } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
             piece = "B";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-            whoseTurn--;
        }
         var endingPieceRow = $(this).data("row");
         var endingPieceCol = $(this).data("col");
