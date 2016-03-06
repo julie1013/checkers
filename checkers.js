@@ -8,7 +8,6 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
 
-var player = "rPlayer";
 var redChecker;
 var blackChecker;
 var middleRow;
@@ -18,6 +17,7 @@ var countB = 12;
 var piece = 0;
 var redScoreCount = 0;
 var blackScoreCount = 0;
+var option = 0;
 
 
 function initializeBoard() {
@@ -52,15 +52,6 @@ function drawBoard() {
     }
 }
 
-function switchPlayer(){
-    if (player === "rPlayer"){
-        player = "bPlayer";
-        return "bPlayer"
-    } else if (player === "bPlayer"){
-        player = "rPlayer";
-        return "rPlayer";
-    }
-}
 
 
 function resetCounter(){
@@ -68,37 +59,7 @@ function resetCounter(){
     countB = 12;
 }
 
-function disableCheckers(){
-        for (var row = 0; row < checkerboard.length; row++){
-            for (var col = 0; col < checkerboard[row].length; col++){
-                if (player === "rPlayer"){
-                    if ($("#" + row + '_' + col).children().hasClass("blackChecker")){
-                        $("#" + row + '_' + col).children().prop("disabled", true);
-                        if ($("#" + row + '_' + col).children().hasClass("blackKing")){
-                            $("#" + row + '_' + col).children().prop("disabled", true);
-                        }
-                    } else if ($("#" + row + '_' + col).children().hasClass("redChecker")){
-                        $("#" + row + '_' + col).children().prop("disable", false);
-                        if ($("#" + row + '_' + col).children().hasClass("redKing")){
-                            $("#" + row + '_' + col).children().prop("disable", false);
-                        }
-                    }
-                } else if (player === "bPlayer"){
-                       if ($("#" + row + '_' + col).children().hasClass("redChecker")){
-                        $("#" + row + '_' + col).children().prop("disabled", true);
-                        if ($("#" + row + '_' + col).children().hasClass("redKing")){
-                            $("#" + row + '_' + col).children().prop("disabled", true);
-                        } else if ($("#" + row + '_' + col).children().hasClass("blackChecker")){
-                        $("#" + row + '_' + col).children().prop("disable", false);
-                        if ($("#" + row + '_' + col).children().hasClass("blackKing")){
-                            $("#" + row + '_' + col).children().prop("disable", false);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+
 
 function scoreCount() {
     if (redWin(countR)){
@@ -130,8 +91,6 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
             piece = checkForPromotion(endingRow, endingCol, piece);
             setSquare(endingRow, endingCol, piece);
             setSquare(firstRow, firstCol, null);
-            switchPlayer();
-            disableCheckers();
         if (Math.abs(endingRow - firstRow) === 2){
              if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
                 countR--;
@@ -159,7 +118,6 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
         }
 
     }
-    switchPlayer();
     return true;
 }
 
@@ -216,9 +174,7 @@ function anotherJumpPossible(row, col, piece){
         }
     }
 }
-    //is two rows ahead/behind null?
-    //is opponent on jump over square?
-    //is it a legal move for the piece?
+//set maximum margins for jumping
 
 
 function isValidJump(firstRow, firstCol, endingRow, endingCol, piece){
@@ -348,26 +304,29 @@ function isTwoRows(firstRow, endingRow, piece){
 $(document).ready(function() {
     drawBoard();
     initializeBoard();
-    disableCheckers();
     $("#checkerboard div").on("click", function(event){
         var pieceRow = $(".selected").data("row");
         var pieceCol = $(".selected").data("col");
-        if ($(this).find(".blackKing").length !==0){
+        if ($(this).find(".blackKing").length !==0 && option == 1){
             piece = "bK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".redKing").length !==0){
+            option--;
+       } else if ($(this).find(".redKing").length !==0 && option == 0){
             piece = "rK";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".redChecker").length !==0){
+            option++;
+       } else if ($(this).find(".redChecker").length !==0 && option == 0){
             piece = "R";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
-       } else if ($(this).find(".blackChecker").length !==0){
+            option++;
+       } else if ($(this).find(".blackChecker").length !==0 && option == 1){
             piece = "B";
             $(this).addClass("selected");
             $(this).siblings().removeClass("selected");
+            option--;
        }
         var endingPieceRow = $(this).data("row");
         var endingPieceCol = $(this).data("col");
