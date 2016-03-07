@@ -69,6 +69,21 @@ h2 {
   text-decoration: underline;
 }
 
+#restart {
+  border: 3px solid black;
+  background: white;
+  color: black;
+  text-shadow: none;
+  float: left;
+  width: 10%;
+  border-radius: 20px;
+  margin-right: -160px;
+  margin-left: 15px;
+  float: left;
+  clear: both;
+  text-align: center;
+}
+
 #end_turn {
   border: 3px solid black;
   border-radius: 20px;
@@ -80,6 +95,7 @@ h2 {
   clear: both;
   width: 10%;
   text-shadow: none;
+  margin-top: -20px;
 }
 
 .hidden {

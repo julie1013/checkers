@@ -21,7 +21,8 @@ var redScoreCount = 0;
 var blackScoreCount = 0;
 var whoseTurn = 0;
 var jumped = false;
-var activePieceCoords = { row: -1, col: -1 };
+var activePieceCoords = { row: -1,
+                          col: -1 };
 
 
 function initializeBoard(){
@@ -72,12 +73,10 @@ function scoreCount() {
 
 function redWin(){
     redScoreCount++;
-    $("#red_wins").replaceWith(" wins!");
     return redScoreCount;
 }
 
 function blackWin(){
-    $("#black_wins").replaceWith(" wins!");
     blackScoreCount++;
     return blackScoreCount;
 }
@@ -137,13 +136,14 @@ function move(firstRow, firstCol, endingRow, endingCol, piece){
 }
 
 function resetGame(){
+    $("#end_turn").addClass("hidden");
     setTimeout(function(){
         initializeBoard();
         resetCounter();
-        whoseTurn = 0;
     }, 2000);
+    whoseTurn = 0;
+    jumped = false;
 }
-
 
 function isJump(endingRow, firstRow){
     return (Math.abs(endingRow - firstRow) === 2);
@@ -372,6 +372,14 @@ $(document).ready(function() {
         ($(this).addClass("hidden"))
         switchTurn();
     });
+
+     $("#restart").on("click", function(){
+        initializeBoard();
+        jumped = false;
+        whoseTurn = 0;
+        resetCounter();
+        $("#end_turn").addClass("hidden");
+     });
 });
 
 
