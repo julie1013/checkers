@@ -82,10 +82,6 @@ function blackWin(){
 }
 
 
-function isGameOver() {
-   return (redWin() || blackWin());
-}
-
 function relocatePiece(firstRow, firstCol, endingRow, endingCol, piece) {
   piece = checkForPromotion(endingRow, endingCol, piece);
   setSquare(endingRow, endingCol, piece);
@@ -145,9 +141,6 @@ function resetGame(){
     jumped = false;
 }
 
-function isJump(endingRow, firstRow){
-    return (Math.abs(endingRow - firstRow) === 2);
-}
 
 function checkForPromotion(endingRow, endingCol, piece){
     if (endingRow === 7 && isRed(piece)){
@@ -200,6 +193,9 @@ function isValidJump(firstRow, firstCol, endingRow, endingCol, piece){
     return (isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && isValidSquare(endingRow, endingCol) && isTwoRows(firstRow, endingRow, piece));
 }
 
+function isJump(endingRow, firstRow){
+    return (Math.abs(endingRow - firstRow) === 2);
+}
 
 function isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol){
     return (checkerboard[endingRow][endingCol] === null);
@@ -265,12 +261,6 @@ function setRank(piece){
     }
 }
 
-
-function isEven(x){
-    return x % 2 === 0;
-}
-
-
 function getPieceAt(row, col){
    return checkerboard[row][col];
 }
@@ -334,16 +324,21 @@ function selectPiece(elt, piece) {
   $(elt).addClass("selected");
   $(elt).siblings().removeClass("selected");
 
-  return piece
+  return piece;
 }
 
 function isActivePiece(pieceRow, pieceCol) {
   if (jumped) {
-    return pieceRow === activePieceCoords['row'] && pieceCol === activePieceCoords['col'];
+    return pieceRow === activePieceCoords["row"] && pieceCol === activePieceCoords["col"];
   } else {
     return true;
   }
 }
+
+function isEven(x){
+    return x % 2 === 0;
+}
+
 
 $(document).ready(function() {
     drawBoard();

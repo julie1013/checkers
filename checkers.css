@@ -10,16 +10,7 @@ Developer @GA in NYC
 /* SETUP
 /*******************************************/
 
-/* Box Model Hack */
-* {
-     -moz-box-sizing: border-box; /* Firexfox */
-     -webkit-box-sizing: border-box; /* Safari/Chrome/iOS/Android */
-     box-sizing: border-box; /* IE */
-}
-
 /* Clear fix hack */
-
-
 
 .clearfix:after {
      content: ".";
@@ -30,19 +21,6 @@ Developer @GA in NYC
      height: 0;
 }
 
-.clear {
-  clear: both;
-}
-
-.alignright {
-  float: right;
-  padding: 0 0 10px 10px; /* note the padding around a right floated image */
-}
-
-.alignleft {
-  float: left;
-  padding: 0 10px 10px 0; /* note the padding around a left floated image */
-}
 
 /******************************************
 /* BASE STYLES
@@ -53,12 +31,11 @@ header {
 }
 
 body {
-  color: white;
   line-height: 1.4;
   font-family: 'Rock Salt', cursive;
-  font-weight: bold;
   text-shadow: 2px 2px black;
   background: url(images/page_background.jpg);
+  min-width: 1400px;
 }
 
 h1, h2 {
@@ -69,33 +46,21 @@ h2 {
   text-decoration: underline;
 }
 
+
 #restart {
-  border: 3px solid black;
-  background: white;
   color: black;
-  text-shadow: none;
-  float: left;
-  width: 10%;
-  border-radius: 20px;
   margin-right: -160px;
   margin-left: 15px;
-  float: left;
-  clear: both;
-  text-align: center;
 }
 
 #end_turn {
-  border: 3px solid black;
-  border-radius: 20px;
-  text-align: center;
   font-size: 16px;
-  font-weight: bold;
   padding-top: 3px;
-  float: left;
-  clear: both;
-  width: 10%;
-  text-shadow: none;
   margin-top: -20px;
+}
+
+#end_turn, body {
+  font-weight: bold;
 }
 
 .hidden {
@@ -107,40 +72,15 @@ h2 {
   width: 645px;
   margin: 0 auto;
   padding: 2.5px 0 0 2px;
-  background: white;
 }
 
-#container div {
-  width: 75px;
-  height: 75px;
-  margin: 2.5px;
-  float: left;
-}
-
-#container div.black {
-  background: url(images/blackSquare.jpg);
-  color: white;
-}
-
-#container div.red {
-  background: url(images/redSquare.jpg);
-  color: white;
-}
 
 .scoreDiv {
   margin-top: -600px;
   margin-left: 100px;
 }
 
-#redScore {
-  float: left;
-  clear: both;
-  text-align: center;
-}
-
 #blackScore {
-  float: right;
-  clear: both;
   margin-top: -600px;
   margin-right: 100px;
 }
@@ -151,16 +91,60 @@ h2 {
 }
 
 
-#blackScoreBox {
-  text-align: center;
-}
-
 #red {
-  float: left;
   margin-left: 50px;
 }
 
 #black {
-  float: right;
   margin-right: 50px;
+}
+
+#container div {
+  width: 75px;
+  height: 75px;
+  margin: 2.5px;
+}
+
+#container div.black, div.red, body {
+  color: white;
+}
+
+#container div.black {
+  background: url(images/blackSquare.jpg);
+
+}
+
+#container div.red {
+  background: url(images/redSquare.jpg);
+}
+
+
+
+#restart, #end_turn {
+  word-wrap: break-word;
+  text-shadow: none;
+  border: 3px solid black;
+  border-radius: 20px;
+  width: 10%;
+}
+
+#restart, #container {
+  background: white;
+}
+
+#restart, #end_turn, #container div, #redScore, #red {
+  float: left;
+}
+
+#restart, #end_turn, #redScore, #blackScore, #red, #black{
+  clear: both;
+}
+
+#restart, #end_turn, #redScore, #blackScoreBox {
+  text-align: center;
+}
+
+
+#blackScore, #black {
+  float: right;
 }
