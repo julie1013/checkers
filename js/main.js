@@ -1,4 +1,13 @@
 
+var checkerboard = [[null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null]];
+
 var Game = function(){
  this.resetGame = function(){
   $("#end_turn").addClass("hidden");
