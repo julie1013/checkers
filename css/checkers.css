@@ -94,6 +94,11 @@ h2 {
   font-size: 50px;
 }
 
+.new_piece {
+  width: 60px;
+  margin: 5px;
+}
+
 
 #red {
   margin-left: 50px;

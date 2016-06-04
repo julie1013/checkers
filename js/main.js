@@ -66,18 +66,19 @@ function Game(){
 
 
 function Board(){
-  this.initializeBoard = function (){
-    for (var row = 0; row < checkerboard.length; row++){
-      for (var col = 0; col < checkerboard[row].length; col++){
-        var playerPiece = new CheckerPiece();
-        if (row < 3){
-            playerPiece.setSquare(row, col, "R");
-        } else if (row > 4){
-            playerPiece.setSquare(row, col, "B");
-        } else {
-            playerPiece.setSquare(row, col, null);
 
-        }
+  this.initializeBoard = function (){
+    this.drawBoard();
+    this.addPieces();
+  };
+
+  this.addPieces = function(){
+    var playableSquare = $(".black");
+    for (var i = 0; i < playableSquare.length; i++){
+      if ($(playableSquare[i]).data("row") < 3){
+          new CheckerPiece("red", $(playableSquare[i]));
+      } else if ($(playableSquare[i]).data("row") > 4){
+          new CheckerPiece("black", $(playableSquare[i]));
       }
     }
   };
@@ -91,7 +92,7 @@ function Board(){
         } else {
           newSquare.squareColor = "red";
         }
-        $("#checkerboard").append("<div class = " + newSquare.squareColor + " data-col='" + col + "' data-row='" + row + "' class='square' id=" + row + '_' + col + "></div>");
+        $("#checkerboard").append('<div class="piece ' + newSquare.squareColor + '" data-col="' + col + '" data-row="' + row + '" id="' + row + '_' + col + '"></div>');
       }
     }
   };
@@ -157,8 +158,18 @@ function Board(){
 
 
 
-function CheckerPiece(){
+function CheckerPiece(color, startSquare){
   var square = new Square();
+
+  this.color = color;
+  this.rank = "Checker"; //Rank adjustment will require refactoring; change rK bK etc.
+  this.startSquare = $(startSquare);
+  var self = this;
+  this.colorEl = (function(piece){
+    var newPiece = $('<img src="images/'+self.color+self.rank+'.jpg" class="'+self.color+self.rank+' new_piece"/>');
+    $(self.startSquare).append(newPiece);
+    return newPiece;
+  })(self);
 
   this.relocatePiece = function(firstRow, firstCol, endingRow, endingCol, piece) {
   piece = checkForPromotion(endingRow, endingCol, piece);
@@ -255,28 +266,26 @@ function CheckerPiece(){
     };
 
   this.setSquare = function(row, col, piece) {
-    var playableSquare = $(".black");
-    for (var i = 0; i < playableSquare.length; i++){
 
-    }
-    if (playableSquare){
-        var color = setColor(piece);
-        var rank = setRank(piece);
-        if (piece !== null){
-        $("#" + row + '_' + col).html('<img src="images/'+color+rank+'.jpg" style="width: 60px" class="'+color+rank+'"/>').children().css("margin", "5px");
-        checkerboard[row][col] = piece;
-        } else {
-            checkerboard[row][col] = null;
-            $("#" + row + '_' + col).html(null);
-        }
-        return piece;
-    }
-  };
+      // if (playableSquare){
+      //     var color = this.setColor(piece);
+      //     var rank = this.setRank(piece);
+      //     if (piece !== null){
+      //     $("#" + row + '_' + col).html('<img src="images/'+color+rank+'.jpg" style="width: 60px" class="'+color+rank+'"/>').children().css("margin", "5px");
+      //     checkerboard[row][col] = piece;
+      //     } else {
+      //         checkerboard[row][col] = null;
+      //         $("#" + row + '_' + col).html(null);
+      //     }
+      //     return piece;
+      // }
+    };
+
 
   this.setColor = function(piece){
-    if (isRed(piece)){
+    if (this.isRed(piece)){
         return "red";
-    } else if (isBlack(piece)){
+    } else if (this.isBlack(piece)){
         return "black";
     } else {
         return null;
@@ -349,7 +358,5 @@ function Square(){
 $(document).ready(function() {
     var newGame = new Game();
     var newBoard = new Board();
-    var newCheckerPiece = new CheckerPiece();
-    newBoard.drawBoard();
     newBoard.initializeBoard();
 });
