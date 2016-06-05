@@ -31,12 +31,12 @@ function Game(){
     }, 2000);
     whoseTurn = 0;
     jumped = false;
-  };
+  };//OK
 
   this.resetCounter = function(){
     countR = 12;
     countB = 12;
-  };
+  };//OK
 
   this.scoreCount = function() {
     if (this.redWin(countR)){
@@ -49,12 +49,12 @@ function Game(){
   this.redWin = function(){
     redScoreCount++;
     return redScoreCount;
-  };
+  };//OK
 
   this.blackWin = function(){
     blackScoreCount++;
     return blackScoreCount;
-  };
+  };//OK
 
   this.resetGame = function(){
     $("#end_turn").addClass("hidden");
@@ -64,7 +64,7 @@ function Game(){
     }, 2000);
     whoseTurn = 0;
     jumped = false;
-  };
+  };//OK
 
   this.switchTurn = function() {
   if (whoseTurn === 1) {
@@ -74,13 +74,13 @@ function Game(){
   }
   jumped = false;
   };
-}
+}//OK
 
 
 
 
 function Board(){
-  var checkStatus = new CheckerPiece();
+  var checker = new CheckerPiece();
 
   this.initializeBoard = function (){
     this.drawBoard();
@@ -121,7 +121,7 @@ function Board(){
         return false;
     }
     return middleRow;
-  };
+  };//OK
 
   this.findMiddleCol = function(firstCol, endingCol){
     if (firstCol + 1 === endingCol - 1){
@@ -132,24 +132,24 @@ function Board(){
         return false;
     }
     return middleCol;
-  };
+  };//OK
 
   this.isAdjacentSpace = function(firstRow, firstCol, endingRow, endingCol){
     return Math.abs(endingCol - firstCol) === 1;
-  };
+  };//OK
 
   this.isTwoColumns = function(firstCol, endingCol){
     return Math.abs(endingCol - firstCol) === 2;
-  };
+  };//OK
 
   this.isNextRow = function(firstRow, endingRow, piece){
-    if (!checkStatus.isKing(piece)){
-        if (checkStatus.isRed(piece)){
+    if (!checker.isKing(piece)){
+        if (checker.isRed(piece)){
             return endingRow === firstRow + 1;
         } else {
             return endingRow === firstRow - 1;
         }
-    } else if(checkStatus.isKing(piece)){
+    } else if(checker.isKing(piece)){
         return Math.abs(endingRow - firstRow) === 1;
     } else {
         return false;
@@ -157,17 +157,18 @@ function Board(){
   };
 
   this.isTwoRows = function(firstRow, endingRow, piece){
-    if (!checkStatus.isKing(piece)){
-        if(checkStatus.isRed(piece)){
+    if (!checker.isKing(piece)){
+        if(checker.isRed(piece)){
             return endingRow === firstRow + 2;
         } else {
             return endingRow === firstRow - 2;
         }
-    } else if(checkStatus.isKing(piece)){
+    } else if(checker.isKing(piece)){
         return Math.abs(endingRow - firstRow) === 2;
     }
   };
 }//new change
+//this is throwing a weird error
 
 
 
@@ -236,49 +237,48 @@ function CheckerPiece(color, startSquare){
   };
 
   this.checkForPromotion = function(endingRow, endingCol, piece){
-    if (endingRow === 7 && isRed(piece)){
-        piece = "rK";
+    if (endingRow === 7 && this.isRed(piece)){
+        this.rank = "King";
    } else if (endingRow === 0 && isBlack(piece)){
-        piece = "bK";
+        this.rank = "King";
    } return piece;
-  };
+  };//new change, not sure about this
 
   this.isPieceTurn = function(){
-    return ((isRed(piece) && whoseTurn === 0) || (isBlack(piece) && whoseTurn === 1));
+    return ((this.isRed(piece) && whoseTurn === 0) || (this.isBlack(piece) && whoseTurn === 1));
   };
 
   this.isRed = function(piece){
-    return (piece === "R" || piece === "rK");
+    return (this.color === "red");
   };
 
   this.isBlack = function(piece){
-    return (piece === "B" || piece === "bK");
+    return (this.color === "black");
   };
 
   this.isKing = function(piece){
-    return (piece ==="rK" || piece === "bK");
+    return (this.rank === "King");
   };
 
   this.isValidJump = function(firstRow, firstCol, endingRow, endingCol, piece){
-    return (Board.isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && CheckerPiece.isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && Board.isValidSquare(endingRow, endingCol) && Board.isTwoRows(firstRow, endingRow, piece));
+    return (Board.isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && this.isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && Board.isValidSquare(endingRow, endingCol) && Board.isTwoRows(firstRow, endingRow, piece));
   };//new change
 
   this.isJump = function(endingRow, firstRow){
     return (Math.abs(endingRow - firstRow) === 2);
-  };
+  };//OK
 
   this.isOpponent = function(piece, row, col){
     if (checkerboard[row][col] === null) {
         return false;
-    } else if ((piece === "R" || piece === "rK") && (checkerboard[row][col] === "B" || checkerboard[row][col]===
-        "bK")) {
+    } else if (this.color === "red" && checkerboard[row][col] === "black") {
         return true;
-    } else if ((piece === "B" || piece === "bK") && (checkerboard[row][col] === "R" || checkerboard[row][col] === "rK")){
+    } else if (this.color === "black" && checkerboard[row][col] === "red"){
         return true;
     } else {
         return false;
         }
-    };
+    };//new change
 
   this.setSquare = function(row, col, piece) {
 
@@ -308,18 +308,18 @@ function CheckerPiece(color, startSquare){
   };
 
   this.setRank = function(piece){
-    if (piece === "rK" || piece === "bK"){
+    if (this.rank === "King"){
         return "King";
-    } else if (piece === "R" || piece === "B"){
+    } else if (this.rank === "Checker"){
         return "Checker";
     } else {
         return null;
-    }
+    }//new change
   };
 
   this.getPieceAt = function(row, col){
    return checkerboard[row][col];
-  };
+  };//OK
 
   this.isValidMove = function(firstRow, firstCol, endingRow, endingCol){
     var validSquare = new Square();
@@ -338,7 +338,7 @@ function CheckerPiece(color, startSquare){
     $(elt).siblings().removeClass("selected");
 
     return piece;
-  };
+  };//OK
 
   this.isActivePiece = function(pieceRow, pieceCol) {
     if (jumped) {
@@ -347,7 +347,7 @@ function CheckerPiece(color, startSquare){
       return true;
     }
   };
-}
+}//OK
 
 
 
