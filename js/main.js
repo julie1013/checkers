@@ -8,6 +8,20 @@ var checkerboard = [[null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null],
                     [null, null, null, null, null, null, null, null]];
 
+var redChecker;
+var blackChecker;
+var middleRow;
+var middleCol;
+var countR = 12;
+var countB = 12;
+var piece = 0;
+var redScoreCount = 0;
+var blackScoreCount = 0;
+var whoseTurn = 0;
+var jumped = false;
+var activePieceCoords = { row: -1,
+                          col: -1 };
+
 function Game(){
  this.resetGame = function(){
   $("#end_turn").addClass("hidden");
@@ -25,11 +39,11 @@ function Game(){
   };
 
   this.scoreCount = function() {
-    if (redWin(countR)){
+    if (this.redWin(countR)){
         $("#redScore").html(redScoreCount);
-    } else if (blackWin(countB)){
+    } else if (this.blackWin(countB)){
         $("#blackScore").html(blackScoreCount);
-    }
+    }//new change
   };
 
   this.redWin = function(){
@@ -66,6 +80,7 @@ function Game(){
 
 
 function Board(){
+  var checkStatus = new CheckerPiece();
 
   this.initializeBoard = function (){
     this.drawBoard();
@@ -128,31 +143,31 @@ function Board(){
   };
 
   this.isNextRow = function(firstRow, endingRow, piece){
-    if (!isKing(piece)){
-        if (isRed(piece)){
+    if (!checkStatus.isKing(piece)){
+        if (checkStatus.isRed(piece)){
             return endingRow === firstRow + 1;
         } else {
             return endingRow === firstRow - 1;
         }
-    } else if(isKing(piece)){
+    } else if(checkStatus.isKing(piece)){
         return Math.abs(endingRow - firstRow) === 1;
     } else {
         return false;
-    }
+    }//new change
   };
 
   this.isTwoRows = function(firstRow, endingRow, piece){
-    if (!isKing(piece)){
-        if(isRed(piece)){
+    if (!checkStatus.isKing(piece)){
+        if(checkStatus.isRed(piece)){
             return endingRow === firstRow + 2;
         } else {
             return endingRow === firstRow - 2;
         }
-    } else if(isKing(piece)){
+    } else if(checkStatus.isKing(piece)){
         return Math.abs(endingRow - firstRow) === 2;
     }
   };
-}
+}//new change
 
 
 
@@ -245,8 +260,8 @@ function CheckerPiece(color, startSquare){
   };
 
   this.isValidJump = function(firstRow, firstCol, endingRow, endingCol, piece){
-    return (isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && isValidSquare(endingRow, endingCol) && isTwoRows(firstRow, endingRow, piece));
-  };
+    return (Board.isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && CheckerPiece.isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && Board.isValidSquare(endingRow, endingCol) && Board.isTwoRows(firstRow, endingRow, piece));
+  };//new change
 
   this.isJump = function(endingRow, firstRow){
     return (Math.abs(endingRow - firstRow) === 2);
@@ -307,15 +322,16 @@ function CheckerPiece(color, startSquare){
   };
 
   this.isValidMove = function(firstRow, firstCol, endingRow, endingCol){
+    var validSquare = new Square();
     piece = checkerboard[firstRow][firstCol];
-    if (!(isValidSquare(firstRow, firstCol) && isValidSquare(endingRow, endingCol))){
+    if (!(validSquare.isValidSquare(firstRow, firstCol) && validSquare.isValidSquare(endingRow, endingCol))){
         return false;
-    } else if (isNextRow(firstRow, endingRow, piece) && isAdjacentSpace(firstRow, firstCol, endingRow, endingCol)){
+    } else if (Board.isNextRow(firstRow, endingRow, piece) && Board.isAdjacentSpace(firstRow, firstCol, endingRow, endingCol)){
         return true;
     } else {
         return false;
     }
-  };
+  };//new change
 
   this.selectPiece = function(elt, piece) {
     $(elt).addClass("selected");
@@ -341,10 +357,11 @@ function Square(){
   };
 
   this.isOpponentOnJumpOverSquare = function(piece, firstRow, firstCol, endingRow, endingCol){
-    findMiddleRow(firstRow, endingRow);
-    findMiddleCol(firstCol, endingCol);
-    return isNextRow(firstRow, middleRow, piece) && isOpponent(piece, middleRow, middleCol)
-  };
+    var identifyOpponent = new CheckerPiece();
+    Board.findMiddleRow(firstRow, endingRow);
+    Board.findMiddleCol(firstCol, endingCol);
+    return Board.isNextRow(firstRow, middleRow, piece) && identifyOpponent.isOpponent(piece, middleRow, middleCol)
+  };//new change
 
   this.isValidSquare = function(row, col){
     return this.isEven(row) && this.isEven(col) || !this.isEven(row) && !this.isEven(col);
