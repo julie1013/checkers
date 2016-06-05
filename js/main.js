@@ -373,7 +373,41 @@ function Square(){
 }
 
 $(document).ready(function() {
-    var newGame = new Game();
+    var myGame = new Game();
     var newBoard = new Board();
     newBoard.initializeBoard();
+    var movingPiece = new CheckerPiece();
+
+    $("#checkerboard div").on("click", function(event){
+        var pieceRow = $(".selected").data("row");
+        var pieceCol = $(".selected").data("col");
+
+        if ($(this).find(".blackKing").length !==0 && whoseTurn == 1){
+            piece = movingPiece.selectPiece(this, "King");
+        } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
+            piece = movingPiece.selectPiece(this, "King");
+        } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
+            piece = movingPiece.selectPiece(this, "Checker")
+        } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
+            piece = movingPiece.selectPiece(this, "Checker")
+        }
+
+        var endingPieceRow = $(this).data("row");
+        var endingPieceCol = $(this).data("col");
+        if (checkerboard[endingPieceRow][endingPieceCol] === null && movingPiece.isPieceTurn() && movingPiece.isActivePiece(pieceRow, pieceCol)){
+          movingpiece.move(pieceRow, pieceCol, endingPieceRow, endingPieceCol, piece);
+        }
+    });
+     $("#end_turn").on("click", function(){
+        ($(this).addClass("hidden"))
+        myGame.switchTurn();
+    });
+
+     $("#restart").on("click", function(){
+        newBoard.initializeBoard();
+        jumped = false;
+        whoseTurn = 0;
+        myGame.resetCounter();
+        $("#end_turn").addClass("hidden");
+     });
 });
