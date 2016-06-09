@@ -80,8 +80,6 @@ function Game(){
 
 
 function Board(){
-  var checker = new CheckerPiece();
-
   this.initializeBoard = function (){
     this.drawBoard();
     this.addPieces();
@@ -101,13 +99,13 @@ function Board(){
   this.drawBoard = function(){
     for (var row = 0; row < checkerboard.length; row++){
       for (var col = 0; col < checkerboard[row].length; col++){
-        var newSquare = new Square();
-        if (newSquare.isValidSquare(row, col)){
-          newSquare.squareColor = "black";
+        var squareColor;
+        if (this.isValidSquare(row, col)){
+          squareColor = "black";
         } else {
-          newSquare.squareColor = "red";
+          squareColor = "red";
         }
-        $("#checkerboard").append('<div class="piece ' + newSquare.squareColor + '" data-col="' + col + '" data-row="' + row + '" id="' + row + '_' + col + '"></div>');
+        new Square(squareColor, row, col);
       }
     }
   };
@@ -167,8 +165,15 @@ function Board(){
         return Math.abs(endingRow - firstRow) === 2;
     }
   };
-}//new change
-//this is throwing a weird error
+
+    this.isValidSquare = function(row, col){
+    return this.isEven(row) && this.isEven(col) || !this.isEven(row) && !this.isEven(col);
+  };
+
+   this.isEven = function(x){
+    return x % 2 === 0;
+  };
+}
 
 
 
@@ -178,7 +183,7 @@ function CheckerPiece(color, startSquare){
   var square = new Square();
 
   this.color = color;
-  this.rank = "Checker"; //Rank adjustment will require refactoring; change rK bK etc.
+  this.rank = "Checker";
   this.startSquare = $(startSquare);
   var self = this;
   this.colorEl = (function(piece){
@@ -186,6 +191,24 @@ function CheckerPiece(color, startSquare){
     $(self.startSquare).append(newPiece);
     return newPiece;
   })(self);
+
+  this.colorEl.on("click", function(){
+    console.log("hi");
+    // var pieceRow = $(this).parent().data("row");
+    // var pieceCol = $(this).parent().data("col");
+    // var clickedPiece;
+    //   $(".selected").removeClass("selected");
+    //   $(this).addClass("selected");
+      // if ($(this).find(".blackKing").length !==0 && whoseTurn == 1){
+      //       piece = "King";
+      //   } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
+      //       piece = "King";
+      //   } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
+      //       piece = "Checker";
+      //   } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
+      //       piece = "Checker";
+      //   };
+  });
 
   this.relocatePiece = function(firstRow, firstCol, endingRow, endingCol, piece) {
   piece = checkForPromotion(endingRow, endingCol, piece);
@@ -206,7 +229,7 @@ function CheckerPiece(color, startSquare){
     if (isValidMove(firstRow, firstCol, endingRow, endingCol) || isValidJump(firstRow, firstCol, endingRow, endingCol, piece)){
         if (isJump(endingRow, firstRow)){
           piece = relocatePiece(firstRow, firstCol, endingRow, endingCol, piece);
-            if (checkerboard[middleRow][middleCol] === "R" || checkerboard[middleRow][middleCol] === "rK"){
+            if (checkerboard[middleRow][middleCol] === "Checker" || checkerboard[middleRow][middleCol] === "King"){
                 countR--;
                 $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
             } else if (checkerboard[middleRow][middleCol] === "B" || checkerboard[middleRow][middleCol] === "bK"){
@@ -261,7 +284,7 @@ function CheckerPiece(color, startSquare){
   };
 
   this.isValidJump = function(firstRow, firstCol, endingRow, endingCol, piece){
-    return (Board.isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && this.isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && Board.isValidSquare(endingRow, endingCol) && Board.isTwoRows(firstRow, endingRow, piece));
+    return (newBoard.isJumpToSquareOpen(firstRow, firstCol, endingRow, endingCol) && this.isOpponentOnJumpOverSquare(piece, firstRow, firstCol, endingRow, endingCol) && newBoard.isValidSquare(endingRow, endingCol) && newBoard.isTwoRows(firstRow, endingRow, piece));
   };//new change
 
   this.isJump = function(endingRow, firstRow){
@@ -326,13 +349,14 @@ function CheckerPiece(color, startSquare){
     piece = checkerboard[firstRow][firstCol];
     if (!(validSquare.isValidSquare(firstRow, firstCol) && validSquare.isValidSquare(endingRow, endingCol))){
         return false;
-    } else if (Board.isNextRow(firstRow, endingRow, piece) && Board.isAdjacentSpace(firstRow, firstCol, endingRow, endingCol)){
+    } else if (newBoard.isNextRow(firstRow, endingRow, piece) && newBoard.isAdjacentSpace(firstRow, firstCol, endingRow, endingCol)){
         return true;
     } else {
         return false;
     }
   };//new change
 
+  //elt is DOM node; piece is type of piece, data type is string
   this.selectPiece = function(elt, piece) {
     $(elt).addClass("selected");
     $(elt).siblings().removeClass("selected");
@@ -351,63 +375,65 @@ function CheckerPiece(color, startSquare){
 
 
 
-function Square(){
+function Square(color, row, col){
+  this.color = color;
+    this.el = (function(square){
+    var newSquare = $('<div class="piece ' + square.color + '" data-col="' + col + '" data-row="' + row + '" id="' + row + '_' + col + '"></div>');
+    $("#checkerboard").append(newSquare);
+    return newSquare
+  })(this);
+
+  // this.colorEl = (function(piece){
+  //   var newPiece = $('<img src="images/'+self.color+self.rank+'.jpg" class="'+self.color+self.rank+' new_piece"/>');
+  //   $(self.startSquare).append(newPiece);
+  //   return newPiece;
+  // })(self);
+
   this.isJumpToSquareOpen = function(firstRow, firstCol, endingRow, endingCol){
     return (checkerboard[endingRow][endingCol] === null);
   };
 
   this.isOpponentOnJumpOverSquare = function(piece, firstRow, firstCol, endingRow, endingCol){
-    var identifyOpponent = new CheckerPiece();
-    Board.findMiddleRow(firstRow, endingRow);
-    Board.findMiddleCol(firstCol, endingCol);
-    return Board.isNextRow(firstRow, middleRow, piece) && identifyOpponent.isOpponent(piece, middleRow, middleCol)
+    newBoard.findMiddleRow(firstRow, endingRow);
+    newBoard.findMiddleCol(firstCol, endingCol);
+    return newBoard.isNextRow(firstRow, middleRow, piece) && identifyOpponent.isOpponent(piece, middleRow, middleCol)
   };//new change
-
-  this.isValidSquare = function(row, col){
-    return this.isEven(row) && this.isEven(col) || !this.isEven(row) && !this.isEven(col);
-  };
-
-  this.isEven = function(x){
-    return x % 2 === 0;
-  };
 }
 
 $(document).ready(function() {
     var myGame = new Game();
     var newBoard = new Board();
     newBoard.initializeBoard();
-    var movingPiece = new CheckerPiece();
 
-    $("#checkerboard div").on("click", function(event){
-        var pieceRow = $(".selected").data("row");
-        var pieceCol = $(".selected").data("col");
+    // // $("#checkerboard div").on("click", function(event){
 
-        if ($(this).find(".blackKing").length !==0 && whoseTurn == 1){
-            piece = movingPiece.selectPiece(this, "King");
-        } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
-            piece = movingPiece.selectPiece(this, "King");
-        } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
-            piece = movingPiece.selectPiece(this, "Checker")
-        } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
-            piece = movingPiece.selectPiece(this, "Checker")
-        }
 
-        var endingPieceRow = $(this).data("row");
-        var endingPieceCol = $(this).data("col");
-        if (checkerboard[endingPieceRow][endingPieceCol] === null && movingPiece.isPieceTurn() && movingPiece.isActivePiece(pieceRow, pieceCol)){
-          movingpiece.move(pieceRow, pieceCol, endingPieceRow, endingPieceCol, piece);
-        }
-    });
-     $("#end_turn").on("click", function(){
-        ($(this).addClass("hidden"))
-        myGame.switchTurn();
-    });
+        // if ($(this).find(".blackKing").length !==0 && whoseTurn == 1){
+        //     piece = "King";
+        // } else if ($(this).find(".redKing").length !==0 && whoseTurn == 0){
+        //     piece = "King";
+        // } else if ($(this).find(".redChecker").length !==0 && whoseTurn == 0){
+        //     piece = "Checker";
+        // } else if ($(this).find(".blackChecker").length !==0 && whoseTurn == 1){
+        //     piece = "Checker";
+        // }
 
-     $("#restart").on("click", function(){
-        newBoard.initializeBoard();
-        jumped = false;
-        whoseTurn = 0;
-        myGame.resetCounter();
-        $("#end_turn").addClass("hidden");
-     });
+    //     var endingPieceRow = $(this).data("row");
+    //     var endingPieceCol = $(this).data("col");
+    //     if (checkerboard[endingPieceRow][endingPieceCol] === null && clickedPiece.isPieceTurn() && clickedPiece.isActivePiece(pieceRow, pieceCol)){
+    //       clickedPiece.move(pieceRow, pieceCol, endingPieceRow, endingPieceCol, piece);
+    //     }
+    // });
+    //  $("#end_turn").on("click", function(){
+    //     ($(this).addClass("hidden"))
+    //     myGame.switchTurn();
+    // });
+
+    //  $("#restart").on("click", function(){
+    //     newBoard.initializeBoard();
+    //     jumped = false;
+    //     whoseTurn = 0;
+    //     myGame.resetCounter();
+    //     $("#end_turn").addClass("hidden");
+    //  });
 });
