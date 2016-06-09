@@ -192,7 +192,8 @@ function CheckerPiece(color, startSquare){
     return newPiece;
   })(self);
 
-  this.colorEl.on("click", function(){
+  this.colorEl.on("click", function(event){
+    event.stopPropagation();
     console.log("hi");
     // var pieceRow = $(this).parent().data("row");
     // var pieceCol = $(this).parent().data("col");
@@ -383,11 +384,9 @@ function Square(color, row, col){
     return newSquare
   })(this);
 
-  // this.colorEl = (function(piece){
-  //   var newPiece = $('<img src="images/'+self.color+self.rank+'.jpg" class="'+self.color+self.rank+' new_piece"/>');
-  //   $(self.startSquare).append(newPiece);
-  //   return newPiece;
-  // })(self);
+  this.el.on("click", function(){
+    console.log("hi");
+  });
 
   this.isJumpToSquareOpen = function(firstRow, firstCol, endingRow, endingCol){
     return (checkerboard[endingRow][endingCol] === null);
