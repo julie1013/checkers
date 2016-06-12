@@ -1,7 +1,7 @@
 var newBoard = new Board();
-var gameLogic = new Rules();
+var gameLogic = new Logic();
 
-function Rules(){
+function Logic(){
 
   this.jumped = false;
   this.whoseTurn = "red";
@@ -14,7 +14,6 @@ function Rules(){
   $("#end_turn").addClass("hidden");
     $("#checkerboard").children().remove();
     newBoard.initializeBoard();
-    // this.resetCounter();
     gameLogic.whoseTurn = "red";
     gameLogic.jumped = false;
   };
@@ -208,7 +207,6 @@ function CheckerPiece(color, startSquare){
   var square = new Square();
 
   this.color = color;
-  this.rank = "Checker";
   this.startSquare = $(startSquare);
   var self = this;
   this.colorEl = (function(piece){
@@ -295,11 +293,6 @@ function Square(color, row, col){
    } return piece;
   };
 
-  this.isPieceTurn = function(){
-    return ((gameLogic.isRed(piece) && whoseTurn === 0) || (gameLogic.isBlack(piece) && whoseTurn === 1));
-  };
-
-
   this.setSquare = function(row, col, piece) {
     var targetSquare = $("#" + row + '_' + col);
       if (gameLogic.isValidSquare && piece !== null){
@@ -307,43 +300,6 @@ function Square(color, row, col){
       } else {
           targetSquare.html(null);
       }
-  };
-
-
-  this.setColor = function(piece){
-    if (gameLogic.isRed(piece)){
-        return "red";
-    } else if (gameLogic.isBlack(piece)){
-        return "black";
-    } else {
-        return null;
-    }
-  };
-
-  this.setRank = function(piece){
-    if (this.rank === "King"){
-        return "King";
-    } else if (this.rank === "Checker"){
-        return "Checker";
-    } else {
-        return null;
-    }
-  };
-
-
-  this.selectPiece = function(elt, piece) {
-    $(elt).addClass("selected");
-    $(elt).siblings().removeClass("selected");
-
-    return piece;
-  };
-
-  this.isActivePiece = function(pieceRow, pieceCol) {
-    if (jumped) {
-      return pieceRow === activePieceCoords["row"] && pieceCol === activePieceCoords["col"];
-    } else {
-      return true;
-    }
   };
 }
 

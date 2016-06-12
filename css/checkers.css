@@ -83,6 +83,14 @@ h2 {
   margin-left: -540px;
 }
 
+.red.king {
+  content: url(../images/redKing.jpg)
+}
+
+.black.king {
+  content: url(../images/blackKing.jpg);
+}
+
 #container {
   height: 645px;
   width: 645px;
