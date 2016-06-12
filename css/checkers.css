@@ -51,7 +51,7 @@ h2 {
 }
 
 
-#restart {
+#restart, .red-button {
   color: black;
   margin-right: -160px;
   margin-left: 15px;
@@ -69,6 +69,18 @@ h2 {
 
 .hidden {
   display: none;
+}
+
+.red-button {
+  background: red;
+  margin-left: 400px;
+  margin-right: -540px;
+}
+
+.black-button {
+  background: black;
+  margin-right: 400px;
+  margin-left: -540px;
 }
 
 #container {
@@ -114,7 +126,7 @@ h2 {
   margin: 2.5px;
 }
 
-#container div.black, div.red, body {
+#container div.black, div.red, body, .black-button {
   color: white;
 }
 
@@ -140,7 +152,7 @@ h2 {
   background: white;
 }
 
-#restart, #end_turn, #container div, #redScore, #red {
+#restart, #container div, #redScore, #red, .red-button {
   float: left;
 }
 
@@ -153,6 +165,6 @@ h2 {
 }
 
 
-#blackScore, #black {
+#blackScore, #black, .black-button {
   float: right;
 }

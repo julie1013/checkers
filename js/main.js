@@ -251,15 +251,14 @@ function Square(color, row, col){
           var middleRow = gameLogic.findMiddleRow(firstRow, endingRow);
           var middleCol = gameLogic.findMiddleCol(firstCol, endingCol);
           var pieceToJumpOver = $("#"+middleRow+"_"+middleCol).children();
-          this.relocatePiece(firstRow, firstCol, endingRow, endingCol, piece);
-          gameLogic.removeJumpedPiece(pieceToJumpOver[0]);
-            // if ($(pieceToJumpOver).hasClass("red")){
-
-            //     $("#end_turn").removeClass("hidden").css("background", "black").css("color", "white").css("margin-right", "400px").css("margin-left", "-540px").css("float", "right");
-            // } else if ($(pieceToJumpOver).hasClass("black")){
-            //     $("#end_turn").removeClass("hidden").css("background", "red").css("color", "black").css("margin-left", "400px").css("margin-right", "-540px").css("float", "left");
-            // }
+            this.relocatePiece(firstRow, firstCol, endingRow, endingCol, piece);
+            gameLogic.removeJumpedPiece(pieceToJumpOver[0]);
             $("#end_turn").removeClass("hidden");
+            if ($(pieceToJumpOver).hasClass("red")){
+              $("#end_turn").addClass("black-button");
+            } else if ($(pieceToJumpOver).hasClass("black")){
+              $("#end_turn").addClass("red-button");
+            }
             gameLogic.jumped = true;
         } else if (!gameLogic.jumped) {
             this.relocatePiece(firstRow, firstCol, endingRow, endingCol, piece);
@@ -351,7 +350,7 @@ function Square(color, row, col){
 $(document).ready(function() {
     newBoard.initializeBoard();
      $("#end_turn").on("click", function(){
-        ($(this).addClass("hidden"))
+        ($(this).addClass("hidden").removeClass("red-button").removeClass("black-button"));
         gameLogic.switchTurn();
     });
 
@@ -364,3 +363,12 @@ $(document).ready(function() {
         $("#end_turn").addClass("hidden");
      });
 });
+
+//Clean up code (comment out code not being used until absolutely sure they aren't being used)
+//Add comments to methods explaining what they do
+
+//Giphy cat fail
+//Login
+
+//var giphyAPI = whatever the number is
+//use API key locally only, or on heroku; do not commit it to github
