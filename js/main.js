@@ -37,11 +37,15 @@ function Logic(){
 
   this.redWin = function(){
     this.score.red++;
+    $("#redScore > .video").removeClass("hidden");
+    Prize.getCatFail();
   };
   //Increases count of red wins
 
   this.blackWin = function(){
     this.score.black++;
+    $("#redScore > .video").removeClass("hidden");
+    Prize.getCatFail();
   };
   //Increases count of black wins
 
@@ -381,11 +385,31 @@ $(document).ready(function() {
      //Game restarts: the checkerboard and its children are removed, jumped is reset to false, turn is initialized to red, end turn button hidden
 });
 
-//Clean up code (comment out code not being used until absolutely sure they aren't being used)
-//Add comments to methods explaining what they do
+var giphyAPI = "dc6zaTOxFJmzC";
+//public key
+var Prize = {};
 
-//Giphy cat fail
-//Login
+Prize.getCatFail = function(){
+  var giphyURL = "http://api.giphy.com/v1/gifs/random";
+  $.ajax({
+    type: "GET",
+    url: giphyURL,
+    data: {
+        username: "julie1013",
+        api_key: giphyAPI,
+        tags: "cat fail"
+    },
+    success: function(){
+      Prize.handleResponse();
+    },
+    error: function(){
+      console.log("Error");
+    }
+  });
+}
 
-//var giphyAPI = whatever the number is
-//use API key locally only, or on heroku; do not commit it to github
+Prize.handleResponse = function() {
+  if ($(".video").css(!"hidden")){
+    $(this).attr("src", data.image_original_url);
+  }
+}

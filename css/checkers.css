@@ -84,11 +84,27 @@ h2 {
 }
 
 .red.king {
-  content: url(../images/redKing.jpg)
+  content: url(../images/redKing.jpg);
 }
 
 .black.king {
   content: url(../images/blackKing.jpg);
+}
+
+.video {
+  width: 396px;
+  height: 200px;
+  border: 1px solid black;
+}
+
+#redScore > .video {
+  float: left;
+  clear: both;
+}
+
+#blackScore > .video {
+  float: right;
+  clear: both;
 }
 
 #container {
