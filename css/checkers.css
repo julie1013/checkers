@@ -71,6 +71,10 @@ h2 {
   display: none;
 }
 
+.not-hidden {
+  display: block;
+}
+
 .red-button {
   background: red;
   margin-left: 400px;

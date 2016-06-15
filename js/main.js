@@ -9,13 +9,15 @@ function Logic(){
   this.score = {
     red: 0,
     black: 0
-  }
+  };
   //initalize jumped to false
   //initialize whoseturn to red
   //create score object with red and black set at 0
 
+  //Fix so that this function runs on start AND ONLY after previous game ends:
    this.resetGame = function(){
-  $("#end_turn").addClass("hidden");
+    $("#end_turn").addClass("hidden");
+    // $(".video").removeClass("not-hidden").addClass("hidden");
     $("#checkerboard").children().remove();
     newBoard.initializeBoard();
     gameLogic.whoseTurn = "red";
@@ -37,14 +39,14 @@ function Logic(){
 
   this.redWin = function(){
     this.score.red++;
-    $("#redScore > .video").removeClass("hidden");
+    $("#redScore > .video").removeClass("hidden").addClass("not-hidden");
     Prize.getCatFail();
   };
   //Increases count of red wins
 
   this.blackWin = function(){
     this.score.black++;
-    $("#redScore > .video").removeClass("hidden");
+    $("#redScore > .video").removeClass("hidden").addClass("not-hidden");
     Prize.getCatFail();
   };
   //Increases count of black wins
@@ -395,12 +397,11 @@ Prize.getCatFail = function(){
     type: "GET",
     url: giphyURL,
     data: {
-        username: "julie1013",
         api_key: giphyAPI,
-        tags: "cat fail"
+        tag: "cat fail"
     },
-    success: function(){
-      Prize.handleResponse();
+    success: function(data){
+      Prize.handleResponse(data);
     },
     error: function(){
       console.log("Error");
@@ -408,8 +409,8 @@ Prize.getCatFail = function(){
   });
 }
 
-Prize.handleResponse = function() {
-  if ($(".video").css(!"hidden")){
-    $(this).attr("src", data.image_original_url);
+Prize.handleResponse = function(data) {
+    var image = $("<img src= " + data.data.image_original_url+">");
+    $(".video").attr("src", image);
   }
-}
+
