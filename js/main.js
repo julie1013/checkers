@@ -410,7 +410,7 @@ Prize.getCatFail = function(){
 }
 
 Prize.handleResponse = function(data) {
-    var image = $("<img src= " + data.data.image_original_url+">");
+    var image = $("<img src= " + data.data.image_original_url+"/>");
     $(".video").attr("src", image);
   }
 
