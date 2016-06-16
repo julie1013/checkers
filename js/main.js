@@ -16,13 +16,15 @@ function Logic(){
 
   //Fix so that this function runs on start AND ONLY after previous game ends:
    this.resetGame = function(){
+    $("#video").empty();
     $("#end_turn").addClass("hidden");
-    // $(".video").removeClass("not-hidden").addClass("hidden");
+    $("#video").removeClass("not-hidden").addClass("hidden");
+    $("#container").removeClass("hidden");
+    $("h1").removeClass("hidden");
     $("#checkerboard").children().remove();
     newBoard.initializeBoard();
     gameLogic.whoseTurn = "red";
     gameLogic.jumped = false;
-
   };
   //hide "end turn" button
   //remove checkerboard and pieces
@@ -37,17 +39,25 @@ function Logic(){
   };
   //Updates HTML with scores for red and black players
 
+  this.showVideo = function(){
+    $("#end_turn").addClass("hidden");
+    $("h1").addClass("hidden");
+    $("#container").addClass("hidden");
+    $("#video").removeClass("hidden").addClass("not-hidden");
+    Prize.getCatFail();
+    var self = this;
+    setTimeout(function(){
+        self.resetGame();
+      }, 20000);
+    }
+
   this.redWin = function(){
     this.score.red++;
-    $("#redScore > .video").removeClass("hidden").addClass("not-hidden");
-    Prize.getCatFail();
   };
   //Increases count of red wins
 
   this.blackWin = function(){
     this.score.black++;
-    $("#redScore > .video").removeClass("hidden").addClass("not-hidden");
-    Prize.getCatFail();
   };
   //Increases count of black wins
 
@@ -211,6 +221,8 @@ function Board(){
   this.initializeBoard = function (){
     this.drawBoard();
     this.addPieces();
+    // this.setWinCondition();
+    //setWinCondition is commented out unless it's necessary to set up win conditions to test
   };
   //Sets up the game by drawing the board and adding the pieces
 
@@ -228,6 +240,19 @@ function Board(){
   //Method adds pieces to the board
   //If the playable square is in a row less than 3, place red pieces there
   //If the playable square is in a row greater than 4, place black pieces there
+
+  this.setWinCondition = function(){
+      var playableSquare = $(".black");
+    //creates an array of black squares
+    for (var i = 0; i < playableSquare.length; i++){
+      if ($(playableSquare[i]).data("row") === 0 && $(playableSquare[i]).data("col") === 0){
+          new CheckerPiece("red", $(playableSquare[i]));
+      } else if ($(playableSquare[i]).data("row") === 1 && $(playableSquare[i]).data("col") === 1){
+          new CheckerPiece("black", $(playableSquare[i]));
+      }
+    }
+  };
+  //Use this to set up a win condition for testing purposes.
 
   this.drawBoard = function(){
     for (var row = 0; row < 8; row++){
@@ -326,14 +351,16 @@ function Moves(color, row, col){
 
         if ($(".red.checker").length === 0){
             gameLogic.blackWin();
-            gameLogic.resetGame();
             gameLogic.scoreCount();
-            //If there are no more red checkers, black wins
+            gameLogic.showVideo();
+            //If there are no more red checkers, black wins, video plays
+            // gameLogic.resetGame();
         } else if ($(".black.checker").length === 0){
             gameLogic.redWin();
-            gameLogic.resetGame();
             gameLogic.scoreCount();
-            //If there are no more black checkers, red wins
+            gameLogic.showVideo();
+            //If there are no more black checkers, red wins, video plays
+            // gameLogic.resetGame();
         }
 
     }
@@ -385,6 +412,7 @@ $(document).ready(function() {
         $("#end_turn").addClass("hidden");
      });
      //Game restarts: the checkerboard and its children are removed, jumped is reset to false, turn is initialized to red, end turn button hidden
+     //MAKE IT OVERRIDE TIMEOUT IF USER WANTS TO
 });
 
 var giphyAPI = "dc6zaTOxFJmzC";
@@ -411,6 +439,6 @@ Prize.getCatFail = function(){
 
 Prize.handleResponse = function(data) {
     var image = $("<img src=" + data.data.image_original_url + ">");
-    $(".video").append(image);
+    $("#video").append(image);
   }
 

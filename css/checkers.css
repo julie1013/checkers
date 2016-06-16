@@ -46,6 +46,11 @@ h2 {
   text-decoration: underline;
 }
 
+p{
+  text-align: center;
+  font-size: 20px;
+}
+
 #checkerboard {
   margin-left: 2px;
 }
@@ -95,20 +100,10 @@ h2 {
   content: url(../images/blackKing.jpg);
 }
 
-.video {
+#video {
   width: 396px;
   height: 200px;
-  border: 1px solid black;
-}
-
-#redScore > .video {
-  float: left;
-  clear: both;
-}
-
-#blackScore > .video {
-  float: right;
-  clear: both;
+  margin: 0 auto;
 }
 
 #container {
